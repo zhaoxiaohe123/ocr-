@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="font">
-      首页
+      首页11
       <div>
         首页2
       </div>

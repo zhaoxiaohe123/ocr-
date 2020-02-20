@@ -4,6 +4,7 @@
       首页11
       <div>
         首页2
+        <el-button type="danger">危险按钮</el-button>
       </div>
     </div>
   </div>

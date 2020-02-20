@@ -11,14 +11,17 @@
 </template>
 
 <script>
+import HttpRequest from '../../utils/axios';
 export default {
   name: 'home',
   data () {
     return {
      
     }
-  }
+  },
+ 
 }
+
 </script>
 
 

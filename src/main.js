@@ -7,7 +7,7 @@ import { Button, Select } from 'element-ui';
 
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);
-Vue.use(Button);
+// Vue.use(Button);
 
 Vue.config.productionTip = false
 

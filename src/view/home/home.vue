@@ -22,5 +22,5 @@ export default {
 
 
 <style lang="less" scoped>
- @import "./home.less";
+ @import "home.less";
 </style>

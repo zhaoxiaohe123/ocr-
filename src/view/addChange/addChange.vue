@@ -1,6 +1,10 @@
 <template>
   <div>
-    修改页面
+   <div class="header">
+      <div class="type">
+        当前状态:<i></i>新增
+      </div>
+   </div>
   </div>
 </template>
 

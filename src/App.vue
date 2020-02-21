@@ -11,4 +11,13 @@ export default {
 </script>
 
 <style>
+  *{
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    color: #3B4162;
+  }
+  ul,li{
+    list-style: none;
+  }
 </style>

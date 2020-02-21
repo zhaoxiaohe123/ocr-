@@ -24,7 +24,7 @@
     <div class="main-content">
       <div class="left-content">
         <div class="sum-number">总数量：6</div>
-        <div class="drawing-details">绘制详情</div>
+        <div class="drawing-details"><img src="./images/drawing-icon.png" alt="">绘制详情</div>
         <ul class="drawing-list">
           <li>1.基础框</li>
           <li>2.姓名</li>
@@ -32,6 +32,42 @@
           <li>4.详情</li>
           <li>5.具体内容</li>
           <li>6.现金支付</li>
+          <li>1.基础框</li>
+          <li>2.姓名</li>
+          <li>3.医保类型</li>
+          <li>4.详情</li>
+          <li>5.具体内容</li>
+          <li>6.现金支付</li><li>1.基础框</li>
+          <li>2.姓名</li>
+          <li>3.医保类型</li>
+          <li>4.详情</li>
+          <li>5.具体内容</li>
+          <li>6.现金支付</li><li>1.基础框</li>
+          <li>2.姓名</li>
+          <li>3.医保类型</li>
+          <li>4.详情</li>
+          <li>5.具体内容</li>
+          <li>6.现金支付</li><li>1.基础框</li>
+          <li>2.姓名</li>
+          <li>3.医保类型</li>
+          <li>4.详情</li>
+          <li>5.具体内容</li>
+          <li>6.现金支付</li><li>1.基础框</li>
+          <li>2.姓名</li>
+          <li>3.医保类型</li>
+          <li>4.详情</li>
+          <li>5.具体内容</li>
+          <li>6.现金支付</li><li>1.基础框</li>
+          <li>2.姓名</li>
+          <li>3.医保类型</li>
+          <li>4.详情</li>
+          <li>5.具体内容</li>
+          <li>6.现金支付</li>
+
+
+
+
+
         </ul>
       </div>
 

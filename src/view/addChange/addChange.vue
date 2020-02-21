@@ -36,7 +36,7 @@
       </div>
 
       <div class="right-content">
-        <img src="./images/test1.jpg" alt="">
+        <img src="./images/test2.png" alt="">
       </div>
     </div>
   </div>

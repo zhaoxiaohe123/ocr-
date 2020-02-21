@@ -8,8 +8,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: (resolve) => require(['@/view/home/home'], resolve)
+      name: 'ListTable',
+      component: (resolve) => require(['@/view/listTable/listTable'], resolve)
     },
     {
       path: '/addchange',
@@ -18,13 +18,8 @@ export default new Router({
     },
     {
       path:'/listTable',
-      name:'listTable',
+      name:'ListTable',
       component: (resolve) => require(['@/view/listTable/listTable'], resolve)
-    },
-    {
-      path:'/addChange',
-      name:'addChange',
-      component: (resolve) => require(['@/view/addChange/addChange'], resolve)
     }
   ]
 })

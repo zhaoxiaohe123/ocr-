@@ -1,5 +1,6 @@
 <template>
   <div>
+    <HeaderContent></HeaderContent>
     <div class="head">
       <div class="head-find"> 
         <el-input  v-model="input" placeholder="请输入搜索名称"></el-input>
@@ -10,7 +11,7 @@
           <img src="../../assets/images/icon-find@2x.png" alt="">
             查询</button> -->
       </div>
-      <div class="head-add">
+      <div class="head-add" @click="add()">
         <img src="../../assets/images/icon_tianjia@2x.png" alt="">
         <span>新增</span>
       </div>
@@ -52,19 +53,24 @@
     </div>
     <div>
       <span>下页</span>
-      <img src="../../assets/images/icon-maehe_z@2x.png" alt="">
+      <img class="img-3" src="../../assets/images/icon-maehe_z@2x.png" alt="">
     </div>
     <div>
       <span>999</span>
-      <img src="../../assets/images/icon-maehe_u@2x.png" alt="">
+      <img class="img-4" src="../../assets/images/icon-maehe_u@2x.png" alt="">
     </div>
   </div>
   </div>
 </template>
 
 <script>
+  import HeaderContent from '@/components/header/header';
+
   export default {
     name: 'listTable',
+    components: {
+      HeaderContent
+    },
     data () {
       return {
         input:'',
@@ -102,6 +108,9 @@
       },
       handleClick(row) {
         console.log(row);
+      },
+      add(){
+        this.$router.push('./addChange')
       }
     }
 

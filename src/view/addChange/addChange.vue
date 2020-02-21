@@ -1,5 +1,6 @@
 <template>
   <div class="add-change-content">
+    <HeaderContent></HeaderContent>
    <div class="type-content">
       <div class="type">
         当前状态:<i></i>新增
@@ -7,13 +8,13 @@
    </div>
     <div class="enter-content">
       <div class="back-btn">
-        <el-button class="green-btn">返回</el-button>
+        <el-button class="green-btn"><img src="./images/back-icon.png" alt="">返回</el-button>
       </div>
       <div class="type-name">
         <div class="name">类型名称：</div>
         <el-input v-model="input" placeholder="请输入类型名称"></el-input>
         <div class="upload-btn">
-          <el-button class="deepPurple-btn">上传照片</el-button>
+          <el-button class="deepPurple-btn"><img src="./images/upload-icon.png" alt="">上传照片</el-button>
         </div>
       </div>
       <div class="submit-btn">
@@ -41,9 +42,14 @@
   </div>
 </template>
 
+
 <script>
+  import HeaderContent from '@/components/header/header';
   export default {
     name: 'addChange',
+    components: {
+      HeaderContent
+    },
     data () {
       return {
         input:''

@@ -1,6 +1,115 @@
-.font{
-    color: red;
-    div{
-        color: blue;
+.type-content{
+  height: 60px;
+  background-color:  #ECEEF7;
+  .type{
+    float: left;
+    margin: 13px 0 0 30px;
+    width: 132px;
+    height: 35px;
+    background-color: rgba(100,127,254,0.10);
+    border-radius: 4px;
+    text-align: center;
+    line-height: 35px;
+    i{
+      display: inline-block;
+      margin: 0 5px 2px;
+      width: 8px;
+      height: 8px;
+      background: #6882FD;
+      box-shadow: 0 0 5px 0 rgba(104,130,253,0.79);
+      border-radius: 4px;
     }
+  }
+}
+
+.enter-content{
+  padding: 12px 36px 12px 30px;
+  height:36px;
+  border-bottom: 1px solid #F3F3F7;
+
+  .back-btn{
+    float: left;
+    img{
+      margin-right: 6px;
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .type-name{
+    float: left;
+    margin-left: 64px;
+    height: 36px;
+    line-height: 36px;
+    display: flex;
+    .name{
+      width: 70px;
+    }
+    .el-input{
+      width: 236px;
+    }
+  }
+
+  .upload-btn{
+    margin-left: 11px;
+    img{
+      margin-right: 4px;
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .submit-btn{
+    float: right;
+  }
+}
+
+.main-content{
+  margin: 35px auto 30px;
+  width: 1264px;
+  height: 601px;
+
+  .left-content{
+    float: left;
+    width: 344px;
+    height: 600px;
+    border: 1px solid #E5E7EF;
+    box-sizing: border-box;
+
+    .sum-number{
+      padding-left: 18px;
+      height: 50px;
+      line-height: 50px;
+      border-bottom: 1px solid #E5E7EF;
+      background: #f5f6fa;
+      box-sizing: border-box;
+    }
+
+    .drawing-details{
+      padding-left: 18px;
+      height: 50px;
+      line-height: 50px;
+      border-bottom: 1px solid #E5E7EF;
+      background: #f5f6fa;
+      box-sizing: border-box;
+    }
+
+    .drawing-list{
+      li{
+        padding-left: 21px;
+        height: 40px;
+        line-height: 40px;
+      }
+      li:nth-of-type(even){
+        background: #f5f6fa;
+      }
+    }
+  }
+
+  .right-content{
+    float: right;
+    width: 900px;
+    height: 600px;
+    overflow: auto;
+  }
 }

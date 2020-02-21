@@ -8,7 +8,7 @@
    </div>
     <div class="enter-content">
       <div class="back-btn">
-        <el-button class="green-btn"><img src="./images/back-icon.png" alt="">返回</el-button>
+        <el-button class="green-btn" @click="backListTable()"><img src="./images/back-icon.png" alt="">返回</el-button>
       </div>
       <div class="type-name">
         <div class="name">类型名称：</div>
@@ -53,6 +53,11 @@
     data () {
       return {
         input:''
+      }
+    },
+    methods:{
+      backListTable(){
+        this.$router.push('./')
       }
     }
   }

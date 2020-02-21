@@ -16,10 +16,5 @@ export default new Router({
       name: 'Addchange',
       component: (resolve) => require(['@/view/addChange/addChange'], resolve)
     },
-    {
-      path:'/listTable',
-      name:'ListTable',
-      component: (resolve) => require(['@/view/listTable/listTable'], resolve)
-    }
   ]
 })

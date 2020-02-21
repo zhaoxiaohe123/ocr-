@@ -5,8 +5,6 @@
       <div>
         首页2
         <el-button type="danger">危险按钮</el-button>
-        <router-link to="/listTable">第一个页面</router-link>
-        <router-link to="/addChange">第二个页面</router-link>
       </div>
     </div>
   </div>
@@ -21,7 +19,7 @@ export default {
      
     }
   },
- 
+
 }
 
 </script>

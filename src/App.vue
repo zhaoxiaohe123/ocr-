@@ -17,4 +17,7 @@ export default {
     font-size: 14px;
     color: #3B4162;
   }
+  ul,li{
+    list-style: none;
+  }
 </style>

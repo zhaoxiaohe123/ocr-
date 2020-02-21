@@ -12,11 +12,6 @@ export default new Router({
       component: (resolve) => require(['@/view/home/home'], resolve)
     },
     {
-      path: '/home',
-      name: 'Home',
-      component: (resolve) => require(['@/view/home/home'], resolve)
-    },
-    {
       path: '/addchange',
       name: 'Addchange',
       component: (resolve) => require(['@/view/addChange/addChange'], resolve)

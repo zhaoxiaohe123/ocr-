@@ -3,10 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Button, Select } from 'element-ui';
+import { Button, Select, Input } from 'element-ui';
 
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);
+Vue.component(Input.name, Input);
 
 Vue.config.productionTip = false
 

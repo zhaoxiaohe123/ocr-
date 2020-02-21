@@ -15,5 +15,15 @@ export default new Router({
       name: 'Home',
       component: (resolve) => require(['@/view/home/home'], resolve)
     },
+    {
+      path:'/listTable',
+      name:'listTable',
+      component: (resolve) => require(['@/view/listTable/listTable'], resolve)
+    },
+    {
+      path:'/addChange',
+      name:'addChange',
+      component: (resolve) => require(['@/view/addChange/addChange'], resolve)
+    }
   ]
 })

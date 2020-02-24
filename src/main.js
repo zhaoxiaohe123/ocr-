@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Button, Select,Input,Table,TableColumn,Upload,MessageBox,Message } from 'element-ui';
+import { Button, Select,Input,Table,TableColumn,Upload,MessageBox,Message ,Pagination} from 'element-ui';
 
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);
@@ -13,6 +13,7 @@ Vue.component(TableColumn.name, TableColumn);
 Vue.component(Upload.name, Upload);
 Vue.component(MessageBox.name, MessageBox);
 Vue.component(Message.name, Message);
+Vue.component(Pagination.name, Pagination);
 // Vue.use(Button);
 // Vue.use(ElementUI);
 Vue.config.productionTip = false;

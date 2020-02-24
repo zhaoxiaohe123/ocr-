@@ -3,13 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Button, Select,Input,Table,TableColumn } from 'element-ui';
+import { Button, Select,Input,Table,TableColumn,Upload } from 'element-ui';
 
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);
 Vue.component(Input.name, Input);
 Vue.component(Table.name, Table);
 Vue.component(TableColumn.name, TableColumn);
+Vue.component(Upload.name, Upload);
 // Vue.use(Button);
 // Vue.use(ElementUI);
 Vue.config.productionTip = false

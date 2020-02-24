@@ -21,8 +21,7 @@
     border stripe
     style="width: 100%">
     <el-table-column
-      prop="num"
-      label="序号"
+      type="index" label="序号"
       width="160">
     </el-table-column>
     <el-table-column
@@ -76,35 +75,45 @@
         input:'',
         // tableData:[]
         tableData:[{
-          num: '1',
           name: '上海市门诊医疗票据'
         }, {
-          num: '2',
           name: '上海市第六人民医院门急诊医疗票据'
         }, {
-          num: '3',
           name: '上海市门诊医疗票据'
         }, {
-          num: '4',
           name: '上海市交通大学附属第九人民医院门急诊医疗票据'
         }, {
-          num: '5',
           name: '上海同济大学附属口腔医院门诊医疗票据'
         },{
-          num: '6',
           name: '上海市第十人民医院门急诊医疗票据'
         }, {
-          num: '7',
           name: '上海市第六人民医院门急诊医疗票据'
         },{
-          num: '8',
           name: '上海市第一妇婴保健院门急诊医疗票据'
         }]
       }
     },
     methods:{
       deleteRow(index, rows) {
+        // rows.splice(index, 1);
+        // console.log("-----1",MessageBox)
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
         rows.splice(index, 1);
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+            // rows.splice(index, 1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
       handleClick(row) {
         console.log(row);

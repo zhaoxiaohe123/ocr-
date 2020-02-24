@@ -12,11 +12,12 @@
       </div>
       <div class="type-name">
         <div class="name">类型名称：</div>
-        <el-input v-model="input" placeholder="请输入类型名称"></el-input>
+        <el-input v-model="imgName" placeholder="请输入类型名称"></el-input>
         <div class="upload-btn">
           <el-upload
             class="upload-content"
             action="https://jsonplaceholder.typicode.com/posts/"
+            ref="upload"
             :on-change="uoloadChange"
             :on-success="uploadSuccess"
             :on-error="uploadError"
@@ -27,7 +28,7 @@
         </div>
       </div>
       <div class="submit-btn">
-        <el-button class="blue-btn">提交数据</el-button>
+        <el-button class="blue-btn" @click="submitUpload">提交数据</el-button>
       </div>
     </div>
     <div class="main-content">
@@ -35,12 +36,15 @@
         <div class="sum-number">总数量：6</div>
         <div class="drawing-details"><img src="./images/drawing-icon.png" alt="">绘制详情</div>
         <ul class="drawing-list">
-          <li>1.基础框</li>
+          <!-- <li>1.基础框</li>
           <li>2.姓名</li>
           <li>3.医保类型</li>
           <li>4.详情</li>
           <li>5.具体内容</li>
-          <li>6.现金支付</li>
+          <li>6.现金支付</li> -->
+          <li v-for="(item,index) in this.point" :key="index">
+            {{index+1}}.{{item.point_name}}
+          </li>
         </ul>
       </div>
 
@@ -61,31 +65,84 @@
     },
     data () {
       return {
-        input:'',
+        imgName:'',
         fileList:[],
-        imgUrl:''
+        imgUrl:'',
+        point:[
+          {
+            point_name: '基础框',
+            x_axis: '10',
+            y_axis: '10',
+            width: '10',
+            height:'10',
+          },
+          {
+            point_name: '姓名',
+            x_axis: '10',
+            y_axis: '10',
+            width: '10',
+            height:'10',
+          },
+          {
+            point_name: '医保类型',
+            x_axis: '10',
+            y_axis: '10',
+            width: '10',
+            height:'10',
+          },
+          {
+            point_name: '详情',
+            x_axis: '10',
+            y_axis: '10',
+            width: '10',
+            height:'10',
+          },
+          {
+            point_name: '具体内容',
+            x_axis: '10',
+            y_axis: '10',
+            width: '10',
+            height:'10',
+          },
+          {
+            point_name: '现金支付',
+            x_axis: '10',
+            y_axis: '10',
+            width: '10',
+            height:'10',
+          }
+        ],
       }
     },
     methods:{
+      // 返回
       backListTable(){
         this.$router.push('./')
       },
+      // 上传图片
       uoloadChange(file,fileList){
         console.log(file,fileList);
         console.log(URL.createObjectURL(file.raw))
-        if(this.input == ''){
+        if(this.imgName == ''){
           console.log('请输入类型名称');
           return false;
         }else{
           this.imgUrl = URL.createObjectURL(file.raw);
         }
       },
+      // 上传成功
       uploadSuccess(res,file,fileLise){
         console.log(res,file,fileList);
       },
+      // 上传失败
       uploadError(err,file,fileLise){
         console.log(err,file,fileList);
       },
+      // 数据提交
+      submitUpload(){
+        this.$refs.upload.submit();
+        console.log('提交');
+      }
     }
   }
 </script>

@@ -13,14 +13,13 @@
       <div class="type-name">
         <div class="name">类型名称：</div>
         <el-input v-model="imgName" placeholder="请输入类型名称"></el-input>
+        <!-- <div class='name-ver'>请输入类型名称</div> -->
         <div class="upload-btn">
           <el-upload
             class="upload-content"
             action="https://jsonplaceholder.typicode.com/posts/"
             ref="upload"
             :on-change="uoloadChange"
-            :on-success="uploadSuccess"
-            :on-error="uploadError"
             :file-list="fileList"
             >
             <el-button class="deepPurple-btn"><img src="./images/upload-icon.png" alt="">上传照片</el-button>
@@ -65,6 +64,7 @@
     },
     data () {
       return {
+        messageState:true,
         imgName:'',
         fileList:[],
         imgUrl:'',
@@ -120,23 +120,22 @@
         this.$router.push('./')
       },
       // 上传图片
-      uoloadChange(file,fileList){
-        console.log(file,fileList);
+      uoloadChange(file){
         console.log(URL.createObjectURL(file.raw))
-        if(this.imgName == ''){
+        if(this.imgName == '' && this.messageState){
+          this.imgUrl = '';
           console.log('请输入类型名称');
-          return false;
         }else{
           this.imgUrl = URL.createObjectURL(file.raw);
         }
       },
       // 上传成功
-      uploadSuccess(res,file,fileLise){
-        console.log(res,file,fileList);
+      uploadSuccess(res,file){
+        console.log(res,file);
       },
       // 上传失败
-      uploadError(err,file,fileLise){
-        console.log(err,file,fileList);
+      uploadError(err,file){
+        console.log(err,file);
       },
       // 数据提交
       submitUpload(){

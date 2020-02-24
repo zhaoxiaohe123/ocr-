@@ -42,11 +42,19 @@
     height: 36px;
     line-height: 36px;
     display: flex;
+    position: relative;
     .name{
       width: 70px;
     }
     .el-input{
       width: 236px;
+    }
+    .name-ver{
+      position: absolute;
+      color: red;
+      font-size: 12px;
+      bottom: -25px;
+      left: 86px;
     }
   }
 
@@ -118,5 +126,8 @@
     width: 900px;
     height: 500px;
     overflow: auto;
+    text-align: center;
+    line-height: 500px;
+    border: 1px solid #E5E7EF;
   }
 }

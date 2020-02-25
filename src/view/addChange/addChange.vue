@@ -48,7 +48,8 @@
       </div>
 
       <div class="right-content">
-        <img :src="this.imgUrl" alt="">
+        <img :src="this.imgUrl" alt="" v-if="imageState">
+        <div v-if="!imageState">暂无数据！</div>
       </div>
     </div>
   </div>
@@ -64,7 +65,7 @@
     },
     data () {
       return {
-        messageState:true,
+        imageState:false,
         imgName:'',
         fileList:[],
         imgUrl:'',
@@ -122,11 +123,13 @@
       // 上传图片
       uoloadChange(file){
         console.log(URL.createObjectURL(file.raw))
-        if(this.imgName == '' && this.messageState){
+        if(this.imgName == ''){
           this.imgUrl = '';
-          console.log('请输入类型名称');
+          this.$message.error('请输入类型名称');
+          this.imageState = false;
         }else{
           this.imgUrl = URL.createObjectURL(file.raw);
+          this.imageState = true;
         }
       },
       // 上传成功

@@ -7,9 +7,6 @@
         <el-button type="primary">
         <img src="../../assets/images/icon-find@2x.png" alt="">
         查询</el-button>
-        <!-- <button>
-          <img src="../../assets/images/icon-find@2x.png" alt="">
-            查询</button> -->
       </div>
       <div class="head-add" @click="add()">
         <img src="../../assets/images/icon_tianjia@2x.png" alt="">
@@ -17,48 +14,55 @@
       </div>
     </div>
     <el-table
-    :data="tableData"
-    border stripe
-    style="width: 100%">
-    <el-table-column
-      type="index" label="序号"
-      width="160">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="名称"
-      width="500">
-    </el-table-column>
-    <el-table-column
-      prop="operation"
-      label="操作">
-       <template slot-scope="scope">
-        <el-button round class="delete" size="small"  @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
-        <el-button round @click="handleClick(scope.row)" class="change-button"  size="small">修改</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-  <div class="pagination">
-    <div>
-      <img src="../../assets/images/icon-maehe_@2x.png" alt="">
-      <span>1</span>
-    </div>
-    <div>
-      <img src="../../assets/images/icon-maehe@2x.png" alt="">
-      <span>上页</span>
-    </div>
-    <div v-for="i in 10" :key="i" class="num"> 
-      <div>{{i}}</div>
-    </div>
-    <div>
-      <span>下页</span>
-      <img class="img-3" src="../../assets/images/icon-maehe_z@2x.png" alt="">
-    </div>
-    <div>
-      <span>999</span>
-      <img class="img-4" src="../../assets/images/icon-maehe_u@2x.png" alt="">
-    </div>
-  </div>
+      :data="tableData"
+      border stripe
+      style="width: 100%">
+      <el-table-column
+        type="index" label="序号"
+        width="160">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="名称"
+        width="500">
+      </el-table-column>
+      <el-table-column
+        prop="operation"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button round class="delete" size="small"  @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
+          <el-button round @click="handleClick(scope.row)" class="change-button"  size="small">修改</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="pagination">
+      <div @click="prev" class="prev_next">
+          <img class="img-1" src="../../assets/images/icon-maehe_@2x.png" alt="">
+          <span>1</span>
+        </div>
+      <div @click="prevPage" class="prev_next">
+            <img class="img-1" src="../../assets/images/icon-maehe@2x.png" alt="">
+            <span>上页</span>
+          </div>
+        <el-pagination 
+          background
+          @size-change="handleSizeChange" 
+          @current-change="handleCurrentChange" 
+          :page-size="pageSize" 
+          :current-page.sync="currentPage"
+          :total="total"
+          :pager-count="pagerCount"
+          layout="pager">
+        </el-pagination>
+        <div @click="nextPage" class="prev_next">
+          <span>下页</span>
+          <img class="img-2" src="../../assets/images/icon-maehe_z@2x.png" alt="">
+        </div>
+        <div @click="next" class="prev_next">
+          <span>999</span>
+          <img class="img-2" src="../../assets/images/icon-maehe_u@2x.png" alt="">
+        </div>
+      </div>
   </div>
 </template>
 
@@ -73,6 +77,10 @@
     data () {
       return {
         input:'',
+        currentPage:1,
+        pageSize:10,
+        total:100,
+        pagerCount:11,
         // tableData:[]
         tableData:[{
           name: '上海市门诊医疗票据'
@@ -95,8 +103,6 @@
     },
     methods:{
       deleteRow(index, rows) {
-        // rows.splice(index, 1);
-        // console.log("-----1",MessageBox)
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -107,7 +113,6 @@
             type: 'success',
             message: '删除成功!'
           });
-            // rows.splice(index, 1);
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -120,6 +125,32 @@
       },
       add(){
         this.$router.push('./addChange')
+      },
+      prev(){
+        this.currentPage=1
+      },
+      next(){
+        this.currentPage=this.total;
+      },
+      prevPage(){
+        if(this.currentPage){
+          this.currentPage-=1
+        }else{
+          this.currentPage=1
+        }
+      },
+      nextPage(){
+        if(this.currentPage<=this.total){
+          this.currentPage+=1
+        }else{
+          this.currentPage=this.total
+        }
+      },
+      handleSizeChange(val) {
+        this.pageSize = val;
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
       }
     }
 
@@ -130,11 +161,7 @@
 <style lang="less" scoped>
   @import "listTable.less";
 </style>
-<style>
-*{
-  margin: 0;
-  padding: 0;
-}
+<style lang="less">
   .el-input__inner{
       font-size: 14px;
       color: #C2C8E3;
@@ -177,5 +204,27 @@
   }
   .el-table__empty-block{
     min-height: 100px;
+  }
+  .el-pagination{
+    padding: 0;
+    .el-pager{
+      .number{
+        padding: 0 !important;
+        width: 30px;
+        height: 30px;
+        margin: 0 6px 0  0 !important;
+        font-size: 12px !important;
+        color: #1E1E1E !important; 
+        background: #FFFFFF !important;
+        border: 1px solid #E5E7EF !important;
+        border-radius: 2px !important;
+        font-weight: 400 !important;
+      }
+      li:not(.disabled).active{
+        color: #FFFFFF !important;
+        background: #3B4162 !important;
+        border: none !important;
+      }
+    }
   }
 </style>

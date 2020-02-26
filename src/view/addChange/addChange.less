@@ -135,6 +135,28 @@
       position: absolute;
       left: 0;
       top: 0;
+      z-index: 1;
+    }
+    .canvas-border{
+      position: absolute;
+      top: 0;
+      left: 0;
+      text-align: center;
+      box-sizing: border-box;
+      z-index: 0;
+      color: #fff;
+      .close{
+        position: absolute;
+        background: rgba(0,0,0,0.50);
+        width: 22px;
+        height: 22px;
+        right: -11px;
+        top: -11px;
+        border-radius: 50%;
+        cursor: pointer;
+        text-align: center;
+        line-height: 22px;
+      }
     }
   }
 }

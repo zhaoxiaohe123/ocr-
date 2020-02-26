@@ -43,8 +43,8 @@
           <li>4.详情</li>
           <li>5.具体内容</li>
           <li>6.现金支付</li> -->
-          <li v-for="(item,index) in this.point" :key="index">
-            {{index+1}}.{{item.point_name}}
+          <li v-for="(item,index) in this.point2" :key="index" :style="{backgroundColor:item.liColor}" @click="changeLiColor(item)">
+            {{index+1}}.{{item.name}}
           </li>
         </ul>
       </div>
@@ -61,6 +61,12 @@
         @mouseup="canvasUp"
         />
          <!-- :width="this.canvasWidth" :height="this.canvasHeight" -->
+        <div class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.zIndex}" v-for="(item,index) in this.point2" :key="index">
+          {{item.name}}
+          <div class="close" @click="delCanvas(index)" v-if="item.liColor != ''">
+            <i class="el-icon-close"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -153,6 +159,7 @@
           this.imageState = true;
           this.getImgWidthHeight(this.imgUrl);
         }
+        this.point2 = [];
       },
       // 上传成功
       uploadSuccess(res,file){
@@ -174,10 +181,10 @@
       // 上传校验
       uploadVer(file){
         let fileName = file.name.replace(/.+\./, "");
-         if (['jpg','png'].indexOf(fileName.toLowerCase()) === -1){            
-            this.$message.error('请上传jpg或png格式得文件');             
-            return false;       
-          }   
+        if (['jpg','png'].indexOf(fileName.toLowerCase()) === -1){            
+          this.$message.error('请上传jpg或png格式得文件');             
+          return false;       
+        }
       },
       // 鼠标按下
       canvasDown(e){
@@ -189,6 +196,12 @@
         let tempCanvas = document.getElementById('customPositionImg');
         let tempCtx = tempCanvas.getContext('2d');
         this.canvasDom = tempCtx;
+        for(let item in this.point2){
+          this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+          this.point2[item].borderColor = '#4848B7';
+          this.point2[item].liColor = '';
+          this.point2[item].zIndex = 0;
+        }
       },
       // 鼠标移动
       canvasMove(e){
@@ -199,33 +212,41 @@
             let wwidth = this.endX - this.startX;
             let wheigth = this.endY - this.startY;
             // 清除临时层指定区域的所有像素
-            this.canvasDom.strokeStyle="red"; //矩形框颜色
+            this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
             this.canvasDom.lineWidth="1"; //矩形框宽度
             // 清除临时层指定区域的所有像素
             this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
             this.canvasDom.strokeRect(this.startX,this.startY,wwidth,wheigth); //绘制矩形
 
-            if(this.point2.length>0){
-              for(let item in this.point2){
-                this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
-                this.canvasDom.lineWidth="1"; //矩形框宽度
-                this.canvasDom.strokeRect(this.point2[item].x,this.point2[item].y,this.point2[item].wwidth,this.point2[item].wheigth)
-              }
-            }
+            // if(this.point2.length>0){
+            //   for(let item in this.point2){
+            //     this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
+            //     this.canvasDom.lineWidth="1"; //矩形框宽度
+            //     this.canvasDom.strokeRect(this.point2[item].x,this.point2[item].y,this.point2[item].wwidth,this.point2[item].wheigth)
+            //   }
+            // }
 
-            console.log(this.$refs.aa.scrollHeight,this.$refs.aa.scrollTop,this.$refs.aa.clientHeight)
-            console.log(this.endY,this.startY)
+            // console.log(this.$refs.aa.scrollHeight,this.$refs.aa.scrollTop,this.$refs.aa.clientHeight)
+            // console.log(this.endY,this.startY)
             // 滚动条判断
-            if((this.$refs.aa.clientHeight-40)<this.endY){
+            let scrollTopHeight = this.$refs.aa.clientHeight/2;
+            let scrollLeftWidth = this.$refs.aa.clientWidth/2;
+            if(this.endY>scrollTopHeight){
               this.$refs.aa.scrollTop = this.$refs.aa.scrollTop + 10;
-            }
-            if((this.$refs.aa.clientHeight-this.startY-40)<this.endY){
+            }else{
               this.$refs.aa.scrollTop = this.$refs.aa.scrollTop - 10;
             }
+
+            if(this.endY>scrollLeftWidth){
+              this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft + 10;
+            }else{
+              this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 10;
+            }
+
           }else{
             let wwidth2 = this.endX - this.startX;
             let wheigth2 = this.endY - this.startY;
-            this.canvasDom.strokeStyle="red"; //矩形框颜色
+            this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
             this.canvasDom.lineWidth="1"; //矩形框宽度
             this.canvasDom.strokeRect(this.startX,this.startY,wwidth2,wheigth2)
           }
@@ -235,22 +256,67 @@
       canvasUp(e){
         this.isMouseDownInCanvas = false;
     　　// 绘制最终的矩形框
-        this.canvasDom.strokeStyle="black"; //矩形框颜色
+        this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
         this.canvasDom.lineWidth="1"; //矩形框宽度
         let wwidth = this.endX - this.startX;
         let wheigth = this.endY - this.startY;
         this.canvasDom.strokeRect(this.startX,this.startY,wwidth,wheigth);
-        let temp = {
-          wwidth:wwidth,
-          wheigth:wheigth,
-          x:this.startX,
-          y:this.startY
+        if(wwidth < 0){
+          wwidth = Math.abs(wwidth);
+          wheigth = Math.abs(wheigth);
+          this.startX = this.startX - wwidth;
+          this.startY = this.startY - wheigth;
         }
         if(wwidth != 0 || wheigth != 0){
-          this.point2.push(temp);
+          if(this.point2.length > 0){
+            this.$prompt('请输入名称', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+              inputErrorMessage: '名称不能为空'
+            }).then(({ value }) => {
+              let temp = {
+                name:value,
+                wwidth:wwidth,
+                wheigth:wheigth,
+                x:this.startX,
+                y:this.startY,
+                borderColor:'#4848B7',
+                backgroundColor:'rgba(70,70,235,0.15)',
+                liColor:'',
+                zIndex:0
+              }
+              console.log(wwidth,wheigth,this.startX,this.startY);
+              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+              this.point2.push(temp);
+            }).catch(() => {
+              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            });
+          }else{
+            this.$confirm('是否将此区域作为基础框', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'success'
+            }).then(() => {
+              let temp = {
+                name:'基础框',
+                wwidth:wwidth,
+                wheigth:wheigth,
+                x:this.startX,
+                y:this.startY,
+                borderColor:'#4848B7',
+                backgroundColor:'rgba(70,70,235,0.15)',
+                liColor:'',
+                zIndex:0
+                
+              }
+              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+              this.point2.push(temp);
+            }).catch(() => {
+              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);          
+            });
+          }
         }
-        
-        console.log(this.point2);
       },
       // 获取图片宽高
       getImgWidthHeight(url){
@@ -262,6 +328,25 @@
           this.canvasWidth = img.width < 900 ? 900 : img.width;
         })
       },
+      // 选中状态
+      changeLiColor(item){
+        console.log(item);
+        for(let item in this.point2){
+          this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+          this.point2[item].borderColor = '#4848B7';
+          this.point2[item].liColor = '';
+          this.point2[item].zIndex = 0;
+        }
+
+        item.backgroundColor = 'rgba(42,194,173,0.10)';
+        item.borderColor = '#52E5D2';
+        item.liColor = '#52E5D2';
+        item.zIndex = 2;
+      },
+      //删除绘制区域
+      delCanvas(index){
+        this.point2.splice(index, 1);
+      }
 
     },
     created(){

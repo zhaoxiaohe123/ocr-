@@ -44,7 +44,8 @@
           <li>5.具体内容</li>
           <li>6.现金支付</li> -->
           <li v-for="(item,index) in this.point2" :key="index" :style="{backgroundColor:item.liColor}" @click="changeLiColor(item)">
-            {{index+1}}.{{item.name}}
+            <div v-if="item.name == '基础框'">{{index+1}}.{{item.name}}</div>
+            <div v-if="item.name != '基础框'" class="cur">{{index+1}}.{{item.name}}</div>
           </li>
         </ul>
       </div>
@@ -61,8 +62,9 @@
         @mouseup="canvasUp"
         />
          <!-- :width="this.canvasWidth" :height="this.canvasHeight" -->
-        <div class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.zIndex}" v-for="(item,index) in this.point2" :key="index">
-          {{item.name}}
+        <div @mousedown="moveCanvas" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.zIndex}" v-for="(item,index) in this.point2" :key="index">
+          <div v-if="item.name == '基础框'">{{item.name != '基础框' ? item.name : ''}}</div>
+          <input type="text" @blur="canvasInputBlur(item.name,index)" ref="canvasInputFocus" class="canvasText" v-if="item.name != '基础框'" v-model="item.name" >
           <div class="close" @click="delCanvas(index)" v-if="item.liColor != ''">
             <i class="el-icon-close"></i>
           </div>
@@ -229,19 +231,27 @@
             // console.log(this.$refs.aa.scrollHeight,this.$refs.aa.scrollTop,this.$refs.aa.clientHeight)
             // console.log(this.endY,this.startY)
             // 滚动条判断
-            let scrollTopHeight = this.$refs.aa.clientHeight/2;
-            let scrollLeftWidth = this.$refs.aa.clientWidth/2;
-            if(this.endY>scrollTopHeight){
-              this.$refs.aa.scrollTop = this.$refs.aa.scrollTop + 10;
-            }else{
-              this.$refs.aa.scrollTop = this.$refs.aa.scrollTop - 10;
+            if((this.endY - this.$refs.aa.scrollTop )>300){
+              this.$refs.aa.scrollTop = this.$refs.aa.scrollTop + 20;
             }
 
-            if(this.endY>scrollLeftWidth){
-              this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft + 10;
-            }else{
-              this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 10;
+            if((this.endY - this.$refs.aa.scrollTop )<200){
+              this.$refs.aa.scrollTop = this.$refs.aa.scrollTop - 20;
             }
+
+            if((this.endX - this.$refs.aa.scrollLeft )>700){
+              this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft + 20;
+            }
+
+            if((this.endX - this.$refs.aa.scrollLeft )<200){
+              this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 20;
+            }
+
+            // if(this.endY>scrollLeftWidth){
+            //   this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft + 10;
+            // }else{
+            //   this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 10;
+            // }
 
           }else{
             let wwidth2 = this.endX - this.startX;
@@ -331,21 +341,60 @@
       // 选中状态
       changeLiColor(item){
         console.log(item);
-        for(let item in this.point2){
-          this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
-          this.point2[item].borderColor = '#4848B7';
-          this.point2[item].liColor = '';
-          this.point2[item].zIndex = 0;
-        }
+        if(item.name !='基础框'){
+          for(let item in this.point2){
+            this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+            this.point2[item].borderColor = '#4848B7';
+            this.point2[item].liColor = '';
+            this.point2[item].zIndex = 0;
+          }
 
-        item.backgroundColor = 'rgba(42,194,173,0.10)';
-        item.borderColor = '#52E5D2';
-        item.liColor = '#52E5D2';
-        item.zIndex = 2;
+          item.backgroundColor = 'rgba(42,194,173,0.10)';
+          item.borderColor = '#52E5D2';
+          item.liColor = '#52E5D2';
+          item.zIndex = 2;
+        }
       },
-      //删除绘制区域
+      // 删除绘制区域
       delCanvas(index){
         this.point2.splice(index, 1);
+      },
+      // 拖动元素
+      moveCanvas(e){
+        let odiv = e.target;   
+        odiv.style.cursor = 'pointer';
+        //算出鼠标相对元素的位置
+        if(odiv.style.width != ''){
+          let disX = e.clientX - odiv.offsetLeft;
+          let disY = e.clientY - odiv.offsetTop;
+          let that = this;
+          // if(canvas-border.class)
+          document.onmousemove = (e)=>{       //鼠标按下并移动的事件
+              //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+              
+              let left = e.clientX - disX;    
+              let top = e.clientY - disY;
+              
+              //绑定元素位置到positionX和positionY上面
+              this.positionX = top;
+              this.positionY = left;
+              
+              //移动当前元素
+              odiv.style.left = left + 'px';
+              odiv.style.top = top + 'px';
+          };
+          document.onmouseup = (e) => {
+              document.onmousemove = null;
+              document.onmouseup = null;
+              odiv.style.cursor = '';
+          };
+        }
+      },
+      // 监听失去焦点
+      canvasInputBlur(name,index){
+        if(name == ''){
+          this.point2.splice(index, 1);
+        }
       }
 
     },

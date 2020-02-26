@@ -62,7 +62,7 @@
         @mouseup="canvasUp"
         />
          <!-- :width="this.canvasWidth" :height="this.canvasHeight" -->
-        <div @mousedown="moveCanvas" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.zIndex}" v-for="(item,index) in this.point2" :key="index">
+        <div @mousedown="moveCanvas" @click="changeColor(item)" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.name != '基础框' ? '2' : '0'}" v-for="(item,index) in this.point2" :key="index">
           <div v-if="item.name == '基础框'">{{item.name != '基础框' ? item.name : ''}}</div>
           <input type="text" @blur="canvasInputBlur(item.name,index)" ref="canvasInputFocus" class="canvasText" v-if="item.name != '基础框'" v-model="item.name" >
           <div class="close" @click="delCanvas(index)" v-if="item.liColor != ''">
@@ -190,7 +190,6 @@
       },
       // 鼠标按下
       canvasDown(e){
-        this.isMouseDownInCanvas = true;
         this.endX = e.offsetX;
         this.endY = e.offsetY;
         this.startX = e.offsetX;
@@ -198,12 +197,29 @@
         let tempCanvas = document.getElementById('customPositionImg');
         let tempCtx = tempCanvas.getContext('2d');
         this.canvasDom = tempCtx;
+        this.isMouseDownInCanvas = true;
         for(let item in this.point2){
           this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
           this.point2[item].borderColor = '#4848B7';
           this.point2[item].liColor = '';
           this.point2[item].zIndex = 0;
+          console.log(this.point2);
+          let height1 = this.point2[item].y + this.point2[item].wheigth;
+          let width1 = this.point2[item].x + this.point2[item].wwidth;
+          console.log(e.offsetX,e.offsetY,height1,width1);
+          // if( e.offsetY > this.point2[item].y &&  e.offsetY < height1){
+          //   if(e.offsetX > this.point2[item].x &&  e.offsetX < width1){
+          //     if(this.point2[item].name != '基础框'){
+          //       this.point2[item].backgroundColor = 'rgba(42,194,173,0.10)';
+          //       this.point2[item].borderColor = '#52E5D2';
+          //       this.point2[item].liColor = '#52E5D2';
+          //       this.point2[item].zIndex = 2;
+          //       this.isMouseDownInCanvas = false;
+          //     }
+          //   }
+          // }
         }
+        
       },
       // 鼠标移动
       canvasMove(e){
@@ -294,7 +310,7 @@
                 borderColor:'#4848B7',
                 backgroundColor:'rgba(70,70,235,0.15)',
                 liColor:'',
-                zIndex:0
+                zIndex:2
               }
               console.log(wwidth,wheigth,this.startX,this.startY);
               this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -317,7 +333,7 @@
                 borderColor:'#4848B7',
                 backgroundColor:'rgba(70,70,235,0.15)',
                 liColor:'',
-                zIndex:0
+                zIndex:2
                 
               }
               this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -346,7 +362,7 @@
             this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
             this.point2[item].borderColor = '#4848B7';
             this.point2[item].liColor = '';
-            this.point2[item].zIndex = 0;
+            this.point2[item].zIndex = 2;
           }
 
           item.backgroundColor = 'rgba(42,194,173,0.10)';
@@ -364,7 +380,7 @@
         let odiv = e.target;   
         odiv.style.cursor = 'pointer';
         //算出鼠标相对元素的位置
-        if(odiv.style.width != ''){
+        if(odiv.style.width != '' && odiv.style.backgroundColor != 'rgba(70, 70, 235, 0.15)'){
           let disX = e.clientX - odiv.offsetLeft;
           let disY = e.clientY - odiv.offsetTop;
           let that = this;
@@ -380,8 +396,42 @@
               this.positionY = left;
               
               //移动当前元素
-              odiv.style.left = left + 'px';
+              
               odiv.style.top = top + 'px';
+              odiv.style.left = left + 'px';
+              console.log(this.point2);
+              let top1 = this.point2[0].y;
+              let top2 = this.point2[0].y+this.point2[0].wheigth;
+              let top3 = top2 - parseInt(odiv.style.height)
+              let left1 = this.point2[0].x;
+              let left2 = this.point2[0].x+this.point2[0].wwidth;
+
+              let left3 = left2 - parseInt(odiv.style.width);
+
+              // if(left < left1){
+              //   odiv.style.left = left1 + 'px';
+              // }
+
+              // if(left > left3){
+              //   odiv.style.left = left3 + 'px';
+              // }
+
+              // if(left > left1 && left < left3 ){
+              //   odiv.style.left = left + 'px';
+              // }
+
+              // if(top < top1){
+              //   odiv.style.top = top1 + 'px';
+              // }
+
+              // if(top > top3){
+              //   odiv.style.top = top3 + 'px';
+              // }
+
+              // if(top > top && left < top3 ){
+              //   odiv.style.top = top + 'px';
+              // }
+
           };
           document.onmouseup = (e) => {
               document.onmousemove = null;
@@ -394,6 +444,21 @@
       canvasInputBlur(name,index){
         if(name == ''){
           this.point2.splice(index, 1);
+        }
+      },
+      changeColor(item){
+        if(item.name !='基础框'){
+          for(let item in this.point2){
+            this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+            this.point2[item].borderColor = '#4848B7';
+            this.point2[item].liColor = '';
+            this.point2[item].zIndex = 2;
+          }
+
+          item.backgroundColor = 'rgba(42,194,173,0.10)';
+          item.borderColor = '#52E5D2';
+          item.liColor = '#52E5D2';
+          item.zIndex = 2;
         }
       }
 

@@ -162,21 +162,8 @@
           this.point2[item].borderColor = '#4848B7';
           this.point2[item].liColor = '';
           this.point2[item].zIndex = 2;
-          console.log(this.point2);
           let height1 = this.point2[item].y + this.point2[item].wheigth;
           let width1 = this.point2[item].x + this.point2[item].wwidth;
-          console.log(e.offsetX,e.offsetY,height1,width1);
-          // if( e.offsetY > this.point2[item].y &&  e.offsetY < height1){
-          //   if(e.offsetX > this.point2[item].x &&  e.offsetX < width1){
-          //     if(this.point2[item].name != '基础框'){
-          //       this.point2[item].backgroundColor = 'rgba(42,194,173,0.10)';
-          //       this.point2[item].borderColor = '#52E5D2';
-          //       this.point2[item].liColor = '#52E5D2';
-          //       this.point2[item].zIndex = 2;
-          //       this.isMouseDownInCanvas = false;
-          //     }
-          //   }
-          // }
         }
         
       },
@@ -195,15 +182,7 @@
             this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
             this.canvasDom.strokeRect(this.startX,this.startY,wwidth,wheigth); //绘制矩形
 
-            // if(this.point2.length>0){
-            //   for(let item in this.point2){
-            //     this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
-            //     this.canvasDom.lineWidth="1"; //矩形框宽度
-            //     this.canvasDom.strokeRect(this.point2[item].x,this.point2[item].y,this.point2[item].wwidth,this.point2[item].wheigth)
-            //   }
-            // }
-
-            // console.log(this.$refs.aa.scrollHeight,this.$refs.aa.scrollTop,this.$refs.aa.clientHeight)
+            
             // console.log(this.endY,this.startY)
             // 滚动条判断
             if((this.endY - this.$refs.aa.scrollTop )>300){
@@ -220,6 +199,10 @@
 
             if((this.endX - this.$refs.aa.scrollLeft )<200){
               this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 20;
+            }
+
+            for(let item in this.point2){
+              this.point2[item].zIndex = 0;
             }
 
           }else{
@@ -240,6 +223,9 @@
         let wwidth = this.endX - this.startX;
         let wheigth = this.endY - this.startY;
         this.canvasDom.strokeRect(this.startX,this.startY,wwidth,wheigth);
+        for(let item in this.point2){
+          this.point2[item].zIndex = 2;
+        }
         if(wwidth < 0){
           wwidth = Math.abs(wwidth);
           wheigth = Math.abs(wheigth);

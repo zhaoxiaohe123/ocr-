@@ -60,14 +60,17 @@
         @mousedown="canvasDown"
         @mousemove="canvasMove"
         @mouseup="canvasUp"
+        :style="{zIndex:this.canvasIndex}"
         />
          <!-- :width="this.canvasWidth" :height="this.canvasHeight" -->
-        <div @mousedown="moveCanvas" @click="changeColor(item)" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.name != '基础框' ? '2' : '0'}" v-for="(item,index) in this.point2" :key="index">
+        <div @mousedown="moveCanvas($event,index)" @click="changeColor(item)" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.name != '基础框' ? item.zIndex : '0'}" v-for="(item,index) in this.point2" :key="index">
           <div v-if="item.name == '基础框'">{{item.name != '基础框' ? item.name : ''}}</div>
-          <input type="text" @blur="canvasInputBlur(item.name,index)" ref="canvasInputFocus" class="canvasText" v-if="item.name != '基础框'" v-model="item.name" >
+          <input type="text" @blur="canvasInputBlur(item.name,index)" ref="canvasInputFocus" class="canvasText" v-if="item.name != '基础框'" v-model="item.name">
           <div class="close" @click="delCanvas(index)" v-if="item.liColor != ''">
             <i class="el-icon-close"></i>
           </div>
+          <div v-if="item.name != '基础框'" class="moveLeft" @mousedown="changeWidth($event,index)" :style="{display:item.liColor !='' ? 'block' : 'none'}"></div>
+          <div v-if="item.name != '基础框'" class="moveTop" @mousedown="changeHeight($event,index)" :style="{display:item.liColor !='' ? 'block' : 'none'}"></div>
         </div>
       </div>
     </div>
@@ -90,58 +93,14 @@
         imgUrl:'',
         canvasWidth:100,
         canvasHeight:500,
-        point:[
-          {
-            point_name: '基础框',
-            x_axis: '10',
-            y_axis: '10',
-            width: '10',
-            height:'10',
-          },
-          {
-            point_name: '姓名',
-            x_axis: '10',
-            y_axis: '10',
-            width: '10',
-            height:'10',
-          },
-          {
-            point_name: '医保类型',
-            x_axis: '10',
-            y_axis: '10',
-            width: '10',
-            height:'10',
-          },
-          {
-            point_name: '详情',
-            x_axis: '10',
-            y_axis: '10',
-            width: '10',
-            height:'10',
-          },
-          {
-            point_name: '具体内容',
-            x_axis: '10',
-            y_axis: '10',
-            width: '10',
-            height:'10',
-          },
-          {
-            point_name: '现金支付',
-            x_axis: '10',
-            y_axis: '10',
-            width: '10',
-            height:'10',
-          }
-        ],
-
         endX:'',
         endY:'',
         startX:'',
         startY:'',
         isMouseDownInCanvas:false,
         canvasDom:'',
-        point2:[]
+        point2:[],
+        canvasIndex:1
       }
     },
     methods:{
@@ -202,7 +161,7 @@
           this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
           this.point2[item].borderColor = '#4848B7';
           this.point2[item].liColor = '';
-          this.point2[item].zIndex = 0;
+          this.point2[item].zIndex = 2;
           console.log(this.point2);
           let height1 = this.point2[item].y + this.point2[item].wheigth;
           let width1 = this.point2[item].x + this.point2[item].wwidth;
@@ -262,12 +221,6 @@
             if((this.endX - this.$refs.aa.scrollLeft )<200){
               this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 20;
             }
-
-            // if(this.endY>scrollLeftWidth){
-            //   this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft + 10;
-            // }else{
-            //   this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 10;
-            // }
 
           }else{
             let wwidth2 = this.endX - this.startX;
@@ -375,68 +328,95 @@
       delCanvas(index){
         this.point2.splice(index, 1);
       },
+      // 改变宽度
+      changeWidth(e,index){
+        let odiv = e.target;
+        let pdiv = odiv.offsetParent;
+        let disX = e.clientX - odiv.offsetLeft;
+        this.canvasIndex = -1;
+        document.onmousemove = (e) =>{
+          let left = e.clientX - disX;    
+          pdiv.style.width = left + 2 + 'px';
+          this.point2[index].wwidth = left + 2 + 'px';
+        }
+        document.onmouseup = (e) => {
+          document.onmousemove = null;
+          document.onmouseup = null;
+          this.canvasIndex = 1;
+        }
+      },
+      // 改变高度
+      changeHeight(e,index){
+        let odiv = e.target;
+        let pdiv = odiv.offsetParent;
+        let disY = e.clientY - odiv.offsetTop;
+        this.canvasIndex = -1;
+        document.onmousemove = (e) =>{
+          let top = e.clientY - disY;    
+          pdiv.style.height = top + 2 + 'px';
+          this.point2[index].height = top + 2 + 'px';
+        }
+        document.onmouseup = (e) => {
+          document.onmousemove = null;
+          document.onmouseup = null;
+          this.canvasIndex = 1;
+        }
+      },
       // 拖动元素
-      moveCanvas(e){
+      moveCanvas(e,index){
         let odiv = e.target;   
         odiv.style.cursor = 'pointer';
+        let poIndex = index;
         //算出鼠标相对元素的位置
         if(odiv.style.width != '' && odiv.style.backgroundColor != 'rgba(70, 70, 235, 0.15)'){
           let disX = e.clientX - odiv.offsetLeft;
           let disY = e.clientY - odiv.offsetTop;
           let that = this;
           // if(canvas-border.class)
+          let scrollx = this.$refs.aa.scrollWidth;
+          let scrolly = this.$refs.aa.scrollHeight;
           document.onmousemove = (e)=>{       //鼠标按下并移动的事件
               //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-              
               let left = e.clientX - disX;    
               let top = e.clientY - disY;
-              
-              //绑定元素位置到positionX和positionY上面
+
               this.positionX = top;
               this.positionY = left;
               
-              //移动当前元素
+              let scrollW = scrollx - parseInt(odiv.style.width);
+              let scrollH = scrolly - parseInt(odiv.style.height);
               
               odiv.style.top = top + 'px';
               odiv.style.left = left + 'px';
-              console.log(this.point2);
-              let top1 = this.point2[0].y;
-              let top2 = this.point2[0].y+this.point2[0].wheigth;
-              let top3 = top2 - parseInt(odiv.style.height)
-              let left1 = this.point2[0].x;
-              let left2 = this.point2[0].x+this.point2[0].wwidth;
 
-              let left3 = left2 - parseInt(odiv.style.width);
+              if(top >= scrollH){
+                odiv.style.top = scrollH + 'px';
+              }
+              if(top <= 0){
+                odiv.style.top = 0 + 'px';
+              }
 
-              // if(left < left1){
-              //   odiv.style.left = left1 + 'px';
-              // }
-
-              // if(left > left3){
-              //   odiv.style.left = left3 + 'px';
-              // }
-
-              // if(left > left1 && left < left3 ){
-              //   odiv.style.left = left + 'px';
-              // }
-
-              // if(top < top1){
-              //   odiv.style.top = top1 + 'px';
-              // }
-
-              // if(top > top3){
-              //   odiv.style.top = top3 + 'px';
-              // }
-
-              // if(top > top && left < top3 ){
-              //   odiv.style.top = top + 'px';
-              // }
+              if(left >= scrollW){
+                odiv.style.left = scrollW + 'px';
+              }
+              if(left <= 0){
+                odiv.style.left = 0 + 'px';
+              }
 
           };
           document.onmouseup = (e) => {
-              document.onmousemove = null;
-              document.onmouseup = null;
-              odiv.style.cursor = '';
+            document.onmousemove = null;
+            document.onmouseup = null;
+            odiv.style.cursor = '';
+            let left = e.clientX - disX;    
+            let top = e.clientY - disY;
+
+            let scrollW = scrollx - parseInt(odiv.style.width);
+            let scrollH = scrolly - parseInt(odiv.style.height);
+            if(left >= 0 && top >= 0 && left < scrollW && top < scrollH){
+              this.point2[poIndex].x = e.clientX - disX;
+              this.point2[poIndex].y = e.clientY - disY;
+            }
           };
         }
       },
@@ -460,8 +440,7 @@
           item.liColor = '#52E5D2';
           item.zIndex = 2;
         }
-      }
-
+      },
     },
     created(){
     }

@@ -162,12 +162,37 @@
       }
 
       .canvasText{
+        position: absolute;
+        top: 50%;
+        left: 0;
         border: none;
         background-color: transparent;
         width: 100%;
         color: #fff;
         cursor: inherit !important;
         text-align: center;
+        z-index: 5;
+        transform: translateY(-50%);
+      }
+
+      .moveLeft{
+        position: absolute;
+        right: -3px;
+        bottom: 1px;
+        width: 5px;
+        height: ceil(100%-11px);
+        z-index: 9;
+        cursor: w-resize !important;
+      }
+
+      .moveTop{
+        position: absolute;
+        right: 0px;
+        bottom: -3px;
+        width: 100%;
+        height: 5px;
+        z-index: 9;
+        cursor: n-resize !important;
       }
     }
   }

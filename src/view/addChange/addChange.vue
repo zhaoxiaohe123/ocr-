@@ -232,7 +232,7 @@
           this.startX = this.startX - wwidth;
           this.startY = this.startY - wheigth;
         }
-        if(wwidth != 0 || wheigth != 0){
+        if(wwidth > 10 || wheigth > 10){
           if(this.point2.length > 0){
             this.$prompt('请输入名称', '提示', {
               confirmButtonText: '确定',

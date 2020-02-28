@@ -313,6 +313,12 @@
       // 删除绘制区域
       delCanvas(index){
         this.point2.splice(index, 1);
+        for(let item in this.point2){
+          this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+          this.point2[item].borderColor = '#4848B7';
+          this.point2[item].liColor = '';
+          this.point2[item].zIndex = 2;
+        }
       },
       // 改变宽度
       changeWidth(e,index){

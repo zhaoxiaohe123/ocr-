@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list-table">
     <HeaderContent></HeaderContent>
     <div class="head">
       <div class="head-find"> 
@@ -162,7 +162,8 @@
   @import "listTable.less";
 </style>
 <style lang="less">
-  .el-input__inner{
+  .list-table{
+    .el-input__inner{
       font-size: 14px;
       color: #C2C8E3;
       background: #FFFFFF;
@@ -172,58 +173,59 @@
       padding: 8px 20px;
       border: none;
       cursor: pointer;
-  }
-  .el-table{
-    margin: 18px 114px 0 122px;
-    width:auto !important;
-    color: #3B4162;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .el-table thead{
-      font-size: 14px;
+    }
+    .el-table{
+      margin: 18px 114px 0 122px;
+      width:auto !important;
       color: #3B4162;
-  }
-  .el-table th{
-    text-align: center;
-  }
-  .el-table__header tr th{
-    background: #FAFAFA;
-  }
-  .el-table__body tr td{
-    border-bottom: none;
-  }
-  .el-table__body tr .el-table_1_column_1 {
-    text-align: center;
-  }
-  .el-table__body tr .el-table_1_column_2{
-    padding:0 30px;
-  }
-  .el-table__body tr td:nth-of-type(3){
-    text-align: center;
-  }
-  .el-table__empty-block{
-    min-height: 100px;
-  }
-  .el-pagination{
-    padding: 0;
-    .el-pager{
-      .number{
-        padding: 0 !important;
-        width: 30px;
-        height: 30px;
-        margin: 0 6px 0  0 !important;
-        font-size: 12px !important;
-        color: #1E1E1E !important; 
-        background: #FFFFFF !important;
-        border: 1px solid #E5E7EF !important;
-        border-radius: 2px !important;
-        font-weight: 400 !important;
-      }
-      li:not(.disabled).active{
-        color: #FFFFFF !important;
-        background: #3B4162 !important;
-        border: none !important;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .el-table thead{
+        font-size: 14px;
+        color: #3B4162;
+    }
+    .el-table th{
+      text-align: center;
+    }
+    .el-table__header tr th{
+      background: #FAFAFA;
+    }
+    .el-table__body tr td{
+      border-bottom: none;
+    }
+    .el-table__body tr .el-table_1_column_1 {
+      text-align: center;
+    }
+    .el-table__body tr .el-table_1_column_2{
+      padding:0 30px;
+    }
+    .el-table__body tr td:nth-of-type(3){
+      text-align: center;
+    }
+    .el-table__empty-block{
+      min-height: 100px;
+    }
+    .el-pagination{
+      padding: 0;
+      .el-pager{
+        .number{
+          padding: 0 !important;
+          width: 30px;
+          height: 30px;
+          margin: 0 6px 0  0 !important;
+          font-size: 12px !important;
+          color: #1E1E1E !important; 
+          background: #FFFFFF !important;
+          border: 1px solid #E5E7EF !important;
+          border-radius: 2px !important;
+          font-weight: 400 !important;
+        }
+        li:not(.disabled).active{
+          color: #FFFFFF !important;
+          background: #3B4162 !important;
+          border: none !important;
+        }
       }
     }
   }

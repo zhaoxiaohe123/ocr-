@@ -31,7 +31,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button round class="delete" size="small"  @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
-          <el-button round @click="handleClick(scope.row)" class="change-button"  size="small">修改</el-button>
+          <el-button round @click="jumpModift(scope.row)" class="change-button"  size="small">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -120,11 +120,11 @@
           });          
         });
       },
-      handleClick(row) {
-        console.log(row);
+      jumpModift(row) {
+        this.$router.push('./addChange');
       },
       add(){
-        this.$router.push('./addChange')
+        this.$router.push('./addChange');
       },
       prev(){
         this.currentPage=1

@@ -20,6 +20,7 @@ export default {
     height:100%;
     font-size: 14px;
     color: #3B4162;
+    overflow: hidden;
   }
   ul{list-style:none}
   a{text-decoration: none;}

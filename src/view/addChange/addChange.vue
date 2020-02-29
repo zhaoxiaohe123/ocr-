@@ -32,11 +32,11 @@
         <el-button class="blue-btn" @click="submitUpload">提交数据</el-button>
       </div>
     </div>
-    <div class="main-content">
+    <div class="main-content" :style="{height:this.mainHeight}">
       <div class="left-content">
         <div class="sum-number">总数量：6</div>
         <div class="drawing-details"><img src="./images/drawing-icon.png" alt="">绘制详情</div>
-        <ul class="drawing-list">
+        <ul class="drawing-list" :style="{height:this.leftLi}">
           <!-- <li>1.基础框</li>
           <li>2.姓名</li>
           <li>3.医保类型</li>
@@ -50,9 +50,9 @@
         </ul>
       </div>
 
-      <div class="right-content" ref="aa">
+      <div class="right-content" ref="aa" :style="{width:this.rightWidth}">
         <img :src="this.imgUrl" alt="" v-show="imageState" ref="uploadImgSize">
-        <div v-show="!imageState">暂无数据！</div>
+        <div class="hite" v-show="!imageState">暂无数据！</div>
         <canvas id="customPositionImg" ref="customPositionImg" 
         :width="this.canvasWidth" 
         :height="this.canvasHeight" 
@@ -100,7 +100,12 @@
         isMouseDownInCanvas:false,
         canvasDom:'',
         point2:[],
-        canvasIndex:1
+        canvasIndex:1,
+        // 所有点集合
+        point:[],
+        mainHeight:0,
+        rightWidth:0,
+        leftLi:0
       }
     },
     methods:{
@@ -138,12 +143,49 @@
       // 自定义上传
       customUpload(file){
         console.log(file)
+        this.point = [];
+        if(this.point2.length > 0){
+          if(this.point2.length == 1){
+            this.point.push({
+              point_name:this.point2[0].name,
+              x_axis:this.point2[0].x,
+              y_axis:this.point2[0].y,
+              width:this.point2[0].wwidth,
+              height:this.point2[0].wheigth
+            })
+          }
+          if(this.point2.length > 1){
+            for(let item in this.point2){
+              let temp = {}
+              if(this.point2[item].name == '基础框'){
+                temp = {
+                  point_name:this.point2[item].name,
+                  x_axis:this.point2[item].x,
+                  y_axis:this.point2[item].y,
+                  width:this.point2[item].wwidth,
+                  height:this.point2[item].wheigth
+                }
+              }else{
+                temp = {
+                  point_name:this.point2[item].name,
+                  x_axis:this.point2[item].x-this.point2[0].x,
+                  y_axis:this.point2[item].y-this.point2[0].y,
+                  width:this.point2[item].wwidth,
+                  height:this.point2[item].wheigth
+                }
+              }
+              this.point.push(temp);
+            }
+          }
+        }
+        console.log(this.point);
       },
       // 上传校验
       uploadVer(file){
         let fileName = file.name.replace(/.+\./, "");
         if (['jpg','png'].indexOf(fileName.toLowerCase()) === -1){            
-          this.$message.error('请上传jpg或png格式得文件');             
+          this.$message.error('请上传jpg或png格式得文件');
+          this.imageState = false;             
           return false;       
         }
       },
@@ -158,8 +200,13 @@
         this.canvasDom = tempCtx;
         this.isMouseDownInCanvas = true;
         for(let item in this.point2){
-          this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
-          this.point2[item].borderColor = '#4848B7';
+          if(this.point2[item].name == '基础框'){
+            this.point2[item].backgroundColor = '';
+            this.point2[item].borderColor = '#E83C3C';
+          }else{
+            this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+            this.point2[item].borderColor = '#4848B7';
+          }
           this.point2[item].liColor = '';
           this.point2[item].zIndex = 2;
           let height1 = this.point2[item].y + this.point2[item].wheigth;
@@ -269,8 +316,8 @@
                 wheigth:wheigth,
                 x:this.startX,
                 y:this.startY,
-                borderColor:'#4848B7',
-                backgroundColor:'rgba(70,70,235,0.15)',
+                borderColor:'#E83C3C',
+                backgroundColor:'',
                 liColor:'',
                 zIndex:2
                 
@@ -288,18 +335,30 @@
         let img = new Image();
         img.src = url;
         img.onload = (()=>{
-          console.log(img.height);
-          this.canvasHeight = img.height < 500 ? 500 : img.height;
-          this.canvasWidth = img.width < 900 ? 900 : img.width;
+          console.log(img.height,this.mainHeight);
+          let mainH = parseInt(this.mainHeight);
+          let rightW = '';
+          if(img.height > mainH){
+            rightW = parseInt(this.rightWidth)-17;
+          }else{
+            rightW = parseInt(this.rightWidth);
+          }
+          this.canvasHeight = img.height < mainH ? mainH : img.height;
+          this.canvasWidth = img.width < rightW ? rightW : img.width;
         })
       },
       // 选中状态
       changeLiColor(item){
-        console.log(item);
         if(item.name !='基础框'){
           for(let item in this.point2){
-            this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
-            this.point2[item].borderColor = '#4848B7';
+            if(this.point2[item].name == '基础框'){
+              this.point2[item].backgroundColor = '';
+              this.point2[item].borderColor = '#E83C3C';
+            }else{
+              this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+              this.point2[item].borderColor = '#4848B7';
+            }
+            
             this.point2[item].liColor = '';
             this.point2[item].zIndex = 2;
           }
@@ -307,8 +366,9 @@
           item.backgroundColor = 'rgba(42,194,173,0.10)';
           item.borderColor = '#52E5D2';
           item.liColor = '#52E5D2';
-          item.zIndex = 2;
+          item.zIndex = 3;
         }
+        console.log(this.point2);
       },
       // 删除绘制区域
       delCanvas(index){
@@ -421,8 +481,14 @@
       changeColor(item){
         if(item.name !='基础框'){
           for(let item in this.point2){
-            this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
-            this.point2[item].borderColor = '#4848B7';
+            if(this.point2[item].name == '基础框'){
+              this.point2[item].backgroundColor = '';
+              this.point2[item].borderColor = '#E83C3C';
+            }else{
+              this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+              this.point2[item].borderColor = '#4848B7';
+            }
+            
             this.point2[item].liColor = '';
             this.point2[item].zIndex = 2;
           }
@@ -430,11 +496,21 @@
           item.backgroundColor = 'rgba(42,194,173,0.10)';
           item.borderColor = '#52E5D2';
           item.liColor = '#52E5D2';
-          item.zIndex = 2;
+          item.zIndex = 3;
         }
       },
+      // 高度自适应
+      getMainHeight(){
+        let mainH = document.documentElement.clientHeight-261;
+        let rightW = document.documentElement.clientWidth-422;
+        let leftLiH = document.documentElement.clientHeight-361;
+        this.mainHeight = mainH + 'px';
+        this.rightWidth = rightW + 'px';
+        this.leftLi = leftLiH + 'px';
+      }
     },
     created(){
+      this.getMainHeight();
     }
   }
 </script>

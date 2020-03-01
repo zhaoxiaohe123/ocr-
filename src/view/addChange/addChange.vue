@@ -51,7 +51,8 @@
       </div>
 
       <div class="right-content" ref="aa" :style="{width:this.rightWidth}">
-        <img :src="this.imgUrl" alt="" v-show="imageState" ref="uploadImgSize">
+        <img :src="this.imgUrl" alt="" v-show="imageState" ref="uploadImgSize" class="upload-imgsize">
+        <div class="img-back" ref="imgBack"></div>
         <div class="hite" v-show="!imageState">暂无数据！</div>
         <canvas id="customPositionImg" ref="customPositionImg" 
         :width="this.canvasWidth" 
@@ -60,6 +61,8 @@
         @mousedown="canvasDown"
         @mousemove="canvasMove"
         @mouseup="canvasUp"
+        @mouseleave="canvasLeave"
+        @mouseover="cnavasOver"
         :style="{zIndex:this.canvasIndex}"
         />
          <!-- :width="this.canvasWidth" :height="this.canvasHeight" -->
@@ -88,6 +91,8 @@
     data () {
       return {
         imageState:false,
+        imgWidth:0,
+        imgHidth:0,
         imgName:'',
         fileList:[],
         imgUrl:'',
@@ -199,6 +204,7 @@
         let tempCtx = tempCanvas.getContext('2d');
         this.canvasDom = tempCtx;
         this.isMouseDownInCanvas = true;
+        console.log(this.point2);
         for(let item in this.point2){
           if(this.point2[item].name == '基础框'){
             this.point2[item].backgroundColor = '';
@@ -212,7 +218,6 @@
           let height1 = this.point2[item].y + this.point2[item].wheigth;
           let width1 = this.point2[item].x + this.point2[item].wwidth;
         }
-        
       },
       // 鼠标移动
       canvasMove(e){
@@ -232,19 +237,21 @@
             
             // console.log(this.endY,this.startY)
             // 滚动条判断
-            if((this.endY - this.$refs.aa.scrollTop )>300){
+            let rightW = parseInt(this.rightWidth);
+            let rightH = parseInt(this.mainHeight);
+            if((this.endY - this.$refs.aa.scrollTop )>(rightH/2+rightH/3)){
               this.$refs.aa.scrollTop = this.$refs.aa.scrollTop + 20;
             }
 
-            if((this.endY - this.$refs.aa.scrollTop )<200){
+            if((this.endY - this.$refs.aa.scrollTop )<(rightH/2-rightH/3)){
               this.$refs.aa.scrollTop = this.$refs.aa.scrollTop - 20;
             }
 
-            if((this.endX - this.$refs.aa.scrollLeft )>700){
+            if((this.endX - this.$refs.aa.scrollLeft )>(rightW/2+rightH/3)){
               this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft + 20;
             }
 
-            if((this.endX - this.$refs.aa.scrollLeft )<200){
+            if((this.endX - this.$refs.aa.scrollLeft )<(rightW/2-rightH/3)){
               this.$refs.aa.scrollLeft = this.$refs.aa.scrollLeft - 20;
             }
 
@@ -263,7 +270,11 @@
       },
       // 鼠标抬起
       canvasUp(e){
-        this.isMouseDownInCanvas = false;
+        if(this.isMouseDownInCanvas){
+          this.isMouseDownInCanvas = false;
+        }else{
+          return false;
+        }
     　　// 绘制最终的矩形框
         this.canvasDom.strokeStyle="#4848B7"; //矩形框颜色
         this.canvasDom.lineWidth="1"; //矩形框宽度
@@ -330,6 +341,20 @@
           }
         }
       },
+      // 鼠标移出
+      canvasLeave(e){
+        if(this.isMouseDownInCanvas){
+          this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+          this.isMouseDownInCanvas = false;
+        }
+      },
+      // 鼠标移入
+      cnavasOver(){
+        if(this.isMouseDownInCanvas){
+          this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+          this.isMouseDownInCanvas = false;
+        }
+      },
       // 获取图片宽高
       getImgWidthHeight(url){
         let img = new Image();
@@ -345,6 +370,15 @@
           }
           this.canvasHeight = img.height < mainH ? mainH : img.height;
           this.canvasWidth = img.width < rightW ? rightW : img.width;
+          
+          this.imgWidth = img.width;
+          this.imgHidth = img.height;
+
+          this.canvasHeight = img.height;
+          this.canvasWidth = img.width;
+
+          this.$refs.imgBack.style.width = img.width + 'px';
+          this.$refs.imgBack.style.height = img.height + 'px';
         })
       },
       // 选中状态
@@ -390,11 +424,19 @@
           let left = e.clientX - disX;    
           pdiv.style.width = left + 2 + 'px';
           this.point2[index].wwidth = left + 2 + 'px';
+          let imgWidth = this.imgWidth - parseInt(pdiv.style.left);
+
+          if(left > imgWidth){
+              pdiv.style.width = imgWidth + 2 + 'px';
+              this.point2[index].wwidth = imgWidth + 2 + 'px';
+          }
         }
         document.onmouseup = (e) => {
           document.onmousemove = null;
           document.onmouseup = null;
           this.canvasIndex = 1;
+
+          console.log(this.point2);
         }
       },
       // 改变高度
@@ -407,11 +449,19 @@
           let top = e.clientY - disY;    
           pdiv.style.height = top + 2 + 'px';
           this.point2[index].height = top + 2 + 'px';
+
+          let imgHidth = this.imgHidth - parseInt(pdiv.style.top);
+
+          if(top > imgHidth){
+              pdiv.style.height = imgHidth + 2 + 'px';
+              this.point2[index].height = imgHidth + 2 + 'px';
+          }
         }
         document.onmouseup = (e) => {
           document.onmousemove = null;
           document.onmouseup = null;
           this.canvasIndex = 1;
+          console.log(this.point2);
         }
       },
       // 拖动元素
@@ -435,24 +485,30 @@
               this.positionX = top;
               this.positionY = left;
               
-              let scrollW = scrollx - parseInt(odiv.style.width);
-              let scrollH = scrolly - parseInt(odiv.style.height);
+              let scrollW = this.imgWidth - parseInt(odiv.style.width);
+              let scrollH = this.imgHidth - parseInt(odiv.style.height);
               
               odiv.style.top = top + 'px';
               odiv.style.left = left + 'px';
+              this.point2[poIndex].y = top;
+              this.point2[poIndex].x = left;
 
               if(top >= scrollH){
                 odiv.style.top = scrollH + 'px';
+                this.point2[poIndex].y = scrollH;
               }
               if(top <= 0){
                 odiv.style.top = 0 + 'px';
+                this.point2[poIndex].y = 0;
               }
 
               if(left >= scrollW){
                 odiv.style.left = scrollW + 'px';
+                this.point2[poIndex].x = scrollW;
               }
               if(left <= 0){
                 odiv.style.left = 0 + 'px';
+                this.point2[poIndex].x = 0;
               }
 
           };
@@ -460,15 +516,7 @@
             document.onmousemove = null;
             document.onmouseup = null;
             odiv.style.cursor = '';
-            let left = e.clientX - disX;    
-            let top = e.clientY - disY;
-
-            let scrollW = scrollx - parseInt(odiv.style.width);
-            let scrollH = scrolly - parseInt(odiv.style.height);
-            if(left >= 0 && top >= 0 && left < scrollW && top < scrollH){
-              this.point2[poIndex].x = e.clientX - disX;
-              this.point2[poIndex].y = e.clientY - disY;
-            }
+            console.log(this.point2);
           };
         }
       },

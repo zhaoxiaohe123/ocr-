@@ -75,6 +75,9 @@
 .main-content{
   margin: 35px auto 35px;
   padding: 0 30px;
+  .upload-imgsize{
+    float: left;
+  }
   .left-content{
     float: left;
     width: 344px;
@@ -132,6 +135,14 @@
     -moz-user-select: none;
     -khtml-user-select: none;
     user-select: none;
+
+    .img-back{
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: #000;
+      opacity: .1;
+    }
 
     #customPositionImg{
       position: absolute;

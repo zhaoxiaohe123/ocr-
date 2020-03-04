@@ -3,7 +3,7 @@
     <HeaderContent></HeaderContent>
    <div class="type-content">
       <div class="type">
-        当前状态:<i></i>{{this.statusGato}}
+        当前状态:<i></i>新增
       </div>
    </div>
     <div class="enter-content">
@@ -17,13 +17,12 @@
         <div class="upload-btn">
           <el-upload
             class="upload-content"
-            action="#"
+            action="https://jsonplaceholder.typicode.com/posts/"
             ref="upload"
             :on-change="uoloadChange"
             :file-list="fileList"
             :http-request="customUpload"
             :before-upload="uploadVer"
-            :auto-upload="false"
             >
             <el-button class="deepPurple-btn"><img src="./images/upload-icon.png" alt="">上传照片</el-button>
           </el-upload>
@@ -84,7 +83,6 @@
 
 <script>
   import HeaderContent from '@/components/header/header';
-  import {AddList,UpdateList} from '@/api/list'
   export default {
     name: 'addChange',
     components: {
@@ -112,9 +110,7 @@
         point:[],
         mainHeight:0,
         rightWidth:0,
-        leftLi:0,
-        imgFile:'',
-        statusGato:'新增'
+        leftLi:0
       }
     },
     methods:{
@@ -123,15 +119,8 @@
         this.$router.push('./')
       },
       // 上传图片
-      uoloadChange(file,fileList){
+      uoloadChange(file){
         console.log(file)
-        // let formData = new FormData() // 创建form对象 
-        // formData.append('file', file.raw);
-        // formData.append('name', this.imgName);
-        // formData.append('points', JSON.stringify(this.point));
-        console.log(this.fileList);
-        this.imgFile = file.raw;
-        console.log(this.imgFile)
         if(this.imgName == ''){
           this.imgUrl = '';
           this.$message.error('请输入类型名称');
@@ -153,6 +142,12 @@
       },
       // 数据提交
       submitUpload(){
+        this.$refs.upload.submit();
+        console.log('提交');
+      },
+      // 自定义上传
+      customUpload(file){
+        console.log(file)
         this.point = [];
         if(this.point2.length > 0){
           if(this.point2.length == 1){
@@ -189,18 +184,6 @@
           }
         }
         console.log(this.point);
-        
-        console.log('提交');
-        if(this.statusGato=='新增'){
-          this.addList();
-        }else{
-          this.updataList()
-        }
-        
-      },
-      // 自定义上传
-      customUpload(file){
-        console.log(file);
       },
       // 上传校验
       uploadVer(file){
@@ -210,14 +193,6 @@
           this.imageState = false;             
           return false;       
         }
-        // let reader = new FileReader();
-        // reader.readAsDataURL(file);
-        // let imgFile = this;
-        // reader.onload = function(e) {
-        //   console.log(this.result); //this.result即为文件流的base64编码
-        //   imgFile = this.result;
-        // }
-        // this.imgFile = imgFile;
       },
       // 鼠标按下
       canvasDown(e){
@@ -541,7 +516,7 @@
             document.onmousemove = null;
             document.onmouseup = null;
             odiv.style.cursor = '';
-            console.log(this.point2,"point----");
+            console.log(this.point2);
           };
         }
       },
@@ -580,46 +555,11 @@
         this.mainHeight = mainH + 'px';
         this.rightWidth = rightW + 'px';
         this.leftLi = leftLiH + 'px';
-      },
-      async addList(){
-        console.log("新增")
-        console.log(this.imgFile)
-        console.log(this.imgName)
-        console.log(JSON.stringify(this.point))
-        let formData = new FormData() // 创建form对象 
-        formData.append('file', this.imgFile);
-        formData.append('name', this.imgName);
-        formData.append('points', JSON.stringify(this.point));
-        // let data ={
-        //   name:this.imgName,
-        //   img:this.imgFile,
-        //   points:JSON.stringify(this.point),
-        // }
-        console.log(formData)
-        let res =await AddList(formData)
-        if(res){
-          console.log("------",res)
-        }
-      },
-       async updataList(){
-        let formData = new FormData() // 创建form对象 
-        formData.append('file', this.imgFile);
-        formData.append('name', this.imgName);
-        formData.append('points', JSON.stringify(this.point));
-        let res = await UpdateList(formData)
-        if(res){
-          console.log(res)
-        }
-      },
+      }
     },
     created(){
       this.getMainHeight();
-      this.statusGato = this.$route.params.statusGato;
-      if(this.$route.params.changeText){
-        
-      }
-    },
-    
+    }
   }
 </script>
 

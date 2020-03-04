@@ -598,11 +598,41 @@
         }
       },
        async updataList(){
-        let formData = new FormData() // 创建form对象 
-        formData.append('file', this.imgFile);
+        // let formData = new FormData() // 创建form对象 
+        // formData.append('file', this.imgFile);
         // formData.append('name', this.imgName);
         // formData.append('points', JSON.stringify(this.point));
-        let res = await UpdateList(formData)
+        let temp = { "pid":"1",
+                      "name": "浦东医疗门诊票据",
+                      "img": "",
+                      "point_id":"1",
+                      "point": [{
+                        "id":"1",
+                        "point_name": "基础框",
+                        "x_axis": "10",
+                        "y_axis": "10",
+                        "width": "10",
+                        "height": "10"
+                      },
+                      {
+                        "id":"2",
+                        "point_name": "详情",
+                        "x_axis": "10",
+                        "y_axis": "10",
+                        "width": "10",
+                        "height": "10"
+                      },
+                      {
+                        "id":"3",
+                        "point_name": "内容",
+                        "x_axis": "10",
+                        "y_axis": "10",
+                        "width": "10",
+                        "height": "10"
+                      }
+                      ]
+                    }
+        let res = await UpdateList({'params':temp})
         if(res){
           console.log(res)
         }
@@ -610,8 +640,7 @@
     },
     created(){
       this.getMainHeight();
-      
-      if(this.$route.params.statusGat){
+      if(this.$route.params.statusGato){
         this.statusGato = this.$route.params.statusGato;
       }
       if(this.$route.params.changeText){

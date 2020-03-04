@@ -119,6 +119,7 @@
         }
         let res = await List(data)
         if (res) {
+          console.log(res);
           this.tableData=res.list
           this.page.total=res.total
           this.page.pageSize=res.pageSize

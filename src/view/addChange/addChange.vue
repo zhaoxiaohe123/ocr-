@@ -121,6 +121,13 @@
       // 上传图片
       uoloadChange(file){
         console.log(file)
+        // let formData = new FormData() // 创建form对象 
+        // formData.append('file', file.raw);
+        // formData.append('name', this.imgName);
+        // formData.append('points', JSON.stringify(this.point));
+        console.log(this.fileList);
+        this.imgFile = file;
+        console.log(this.imgFile)
         if(this.imgName == ''){
           this.imgUrl = '';
           this.$message.error('请输入类型名称');
@@ -555,11 +562,57 @@
         this.mainHeight = mainH + 'px';
         this.rightWidth = rightW + 'px';
         this.leftLi = leftLiH + 'px';
-      }
+      },
+      async addList(){
+        console.log("新增")
+        console.log(this.imgFile)
+        console.log(this.imgName)
+        console.log(JSON.stringify(this.point))
+        let formData = new FormData() // 创建form对象 
+        let point11 = {
+          point:this.point
+        }
+        formData.append('file', this.imgFile);
+        // formData.append('name', this.imgName);
+        // formData.append('points', point11);
+        let data ={
+          file:'',
+          name:this.imgName,
+          points:JSON.stringify(point11),
+        }
+
+        console.log(data)
+        let res =await AddList({
+          file:'',
+          name:'11',
+          points:'"point:[]'
+        })
+        if(res){
+          console.log("------",res)
+        }
+      },
+       async updataList(){
+        let formData = new FormData() // 创建form对象 
+        formData.append('file', this.imgFile);
+        formData.append('name', this.imgName);
+        formData.append('points', JSON.stringify(this.point));
+        let res = await UpdateList(formData)
+        if(res){
+          console.log(res)
+        }
+      },
     },
     created(){
       this.getMainHeight();
-    }
+      
+      if(this.$route.params.statusGat){
+        this.statusGato = this.$route.params.statusGato;
+      }
+      if(this.$route.params.changeText){
+        
+      }
+    },
+    
   }
 </script>
 

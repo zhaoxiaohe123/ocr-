@@ -15,15 +15,23 @@ export function DelList (data) {
 }
 export function AddList (data) {
   return request({
-    url: '/api/ocrapi/v1/addList',
+    url: '/ocrapi/v1/addList',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      "Accept": "*/*",
+    },
     method: 'POST',
-    params: data,
+    data
   })
 }
 export function UpdateList (data) {
   return request({
     url: '/ocrapi/v1/update',
     method: 'POST',
-    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      "Accept": "*/*",
+    },
+    data,
   })
 }

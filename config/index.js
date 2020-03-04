@@ -11,14 +11,14 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        // 测试环境
-        target: 'http://192.168.168.34:8081',  // 接口域名
-        changeOrigin: true,  //是否跨域
-        pathRewrite: {
-          '^/api': '' 
-        }
-      }
+      // '/api': {
+      //   // 测试环境
+      //   target: 'http://192.168.168.34:8081/',  // 接口域名
+      //   changeOrigin: true,  //是否跨域
+      //   pathRewrite: {
+      //     '^/api': '/' 
+      //   }
+      // }
     },
 
     // Various Dev Server settings

@@ -576,32 +576,30 @@
         console.log(JSON.stringify(this.point))
         let formData = new FormData() // 创建form对象 
         let point11 = {
-          point:this.point
+          point:JSON.stringify(this.point)
         }
-        formData.append('file', this.imgFile);
-        // formData.append('name', this.imgName);
-        // formData.append('points', point11);
-        let data ={
-          file:'',
-          name:this.imgName,
-          points:JSON.stringify(point11),
-        }
+        console.log(point11)
+        formData.append('file', this.imgFile.raw);
+        formData.append('name', this.imgName);
+        formData.append('points', point11);
+        // let data ={
+        //   file:'',
+        //   name:this.imgName,
+        //   points:JSON.stringify(point11),
+        // }
 
-        console.log(data)
-        let res =await AddList({
-          file:'',
-          name:'11',
-          points:'"point:[]'
-        })
+        // console.log(data)
+        let res =await AddList(formData)
         if(res){
           console.log("------",res)
         }
       },
        async updataList(){
-        // let formData = new FormData() // 创建form对象 
+         console.log(this.point)
+        let formData = new FormData() // 创建form对象 
         // formData.append('file', this.imgFile);
         // formData.append('name', this.imgName);
-        // formData.append('points', JSON.stringify(this.point));
+        // formData.append('params', JSON.stringify(this.point));
         let temp = { "pid":"1",
                       "name": "浦东医疗门诊票据",
                       "img": "",
@@ -632,9 +630,11 @@
                       }
                       ]
                     }
-        let res = await UpdateList({'params':temp})
+        formData.append('params', temp);
+
+        let res = await UpdateList(formData)
         if(res){
-          console.log(res)
+          console.log(res,"---update---")
         }
       },
     },

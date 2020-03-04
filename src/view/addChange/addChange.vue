@@ -130,7 +130,7 @@
         // formData.append('name', this.imgName);
         // formData.append('points', JSON.stringify(this.point));
         console.log(this.fileList);
-        this.imgFile = file.raw;
+        this.imgFile = file;
         console.log(this.imgFile)
         if(this.imgName == ''){
           this.imgUrl = '';
@@ -587,16 +587,24 @@
         console.log(this.imgName)
         console.log(JSON.stringify(this.point))
         let formData = new FormData() // 创建form对象 
+        let point11 = {
+          point:this.point
+        }
         formData.append('file', this.imgFile);
-        formData.append('name', this.imgName);
-        formData.append('points', JSON.stringify(this.point));
-        // let data ={
-        //   name:this.imgName,
-        //   img:this.imgFile,
-        //   points:JSON.stringify(this.point),
-        // }
-        console.log(formData)
-        let res =await AddList(formData)
+        // formData.append('name', this.imgName);
+        // formData.append('points', point11);
+        let data ={
+          file:'',
+          name:this.imgName,
+          points:JSON.stringify(point11),
+        }
+
+        console.log(data)
+        let res =await AddList({
+          file:'',
+          name:'11',
+          points:'"point:[]'
+        })
         if(res){
           console.log("------",res)
         }
@@ -614,7 +622,10 @@
     },
     created(){
       this.getMainHeight();
-      this.statusGato = this.$route.params.statusGato;
+      
+      if(this.$route.params.statusGat){
+        this.statusGato = this.$route.params.statusGato;
+      }
       if(this.$route.params.changeText){
         
       }

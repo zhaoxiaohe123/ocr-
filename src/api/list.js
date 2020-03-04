@@ -15,7 +15,7 @@ export function DelList (data) {
 }
 export function AddList (data) {
   return request({
-    url: '/ocrapi/v1/addList',
+    url: '/api/ocrapi/v1/addList',
     method: 'POST',
     params: data,
   })

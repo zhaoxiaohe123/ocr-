@@ -612,8 +612,8 @@
        async updataList(){
         let formData = new FormData() // 创建form对象 
         formData.append('file', this.imgFile);
-        formData.append('name', this.imgName);
-        formData.append('points', JSON.stringify(this.point));
+        // formData.append('name', this.imgName);
+        // formData.append('points', JSON.stringify(this.point));
         let res = await UpdateList(formData)
         if(res){
           console.log(res)

@@ -16,8 +16,7 @@ module.exports = {
         target: 'http://192.168.168.34:8081',  // 接口域名
         changeOrigin: true,  //是否跨域
         pathRewrite: {
-          '^/api': '' // pathRewrite方法重写url, 这样配置出来的url为http://localhost:8081/api/seller
-          // '^/api': '/' // pathRewrite方法重写url, 这样配置出来的url为http://localhost:8081/seller
+          '^/api': '' 
         }
       }
     },

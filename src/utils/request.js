@@ -1,20 +1,15 @@
 import axios from 'axios'
-// import { Message } from 'element-ui'
-// import store from 'store/index'
-import router from 'router'
+import { Message } from 'element-ui'
 // ESTABLISH AXIOS
 const service = axios.create({
   baseURL: process.env.BASE_URL,
-  timeout: 20000
+  timeout: 20000,
 })
-
+// 'Content-Type': 'application/x-www-form-urlencoded'
 // REQUEST INTERCEPT
 service.interceptors.request.use(
   config => {
-    // let token = store.state.token
-    // if (store.state.token) {
-    //   config.headers['Token'] = 'Bearer ' + token
-    // }
+    // console.log(config)
     return config
   },
   err => {
@@ -26,48 +21,29 @@ service.interceptors.request.use(
 // RESPONE  INTERCEPT
 service.interceptors.response.use(
   response => {
-    let res = response.data
-    return res
+    console.log(response)
+    let { data } = response
+    if (data.status) {
+      return data.data
+    }else{
+      return ""
+    }
+    
   },
   err => {
     if (err && err.response) {
       switch (err.response.status) {
-        case 400:
-          err.message = '请求错误'
-          break
-        case 401:
-          err.message = '未授权，请登录'
-          break
-        case 403:
-          err.message = '拒绝访问'
-          break
-        case 404:
-          err.message = `请求地址出错: ${err.response.config.url}`
-          router.replace('/404')
-          break
-        case 408:
-          err.message = '请求超时'
-          router.replace('/home')
-          break
-        case 500:
-          err.message = '服务器内部错误'
-          router.replace('/500')
-          break
-        case 501:
-          err.message = '服务未实现'
-          break
-        case 502:
-          err.message = '网关错误'
-          break
-        case 503:
-          err.message = '服务不可用'
-          break
-        case 504:
-          err.message = '网关超时'
-          break
-        case 505:
-          err.message = 'HTTP版本不受支持'
-          break
+        case 400: err.message = '请求错误'; break
+        case 401: err.message = '未授权，请登录'; break
+        case 403: err.message = '拒绝访问'; break
+        case 404: err.message = `请求地址出错: ${err.response.config.url}`; break
+        case 408: err.message = '请求超时'; break
+        case 500: err.message = '服务器内部错误'; break
+        case 501: err.message = '服务未实现'; break
+        case 502: err.message = '网关错误'; break
+        case 503: err.message = '服务不可用'; break
+        case 504: err.message = '网关超时'; break
+        case 505: err.message = 'HTTP版本不受支持'; break
         default:
       }
     }

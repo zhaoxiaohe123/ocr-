@@ -1,7 +1,7 @@
 import axios from 'axios'
 // import store from '@/store'
 // import { getToken } from '../libs/util'
-axios.defaults.baseURL='http://ip:port/url'
+// axios.defaults.baseURL='http://ip:port/url'
 class HttpRequest {
   // constructor (baseUrl) {
     // this.baseUrl = baseUrl

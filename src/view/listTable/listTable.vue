@@ -3,8 +3,8 @@
     <HeaderContent></HeaderContent>
     <div class="head">
       <div class="head-find"> 
-        <el-input  v-model="input" placeholder="请输入搜索名称"></el-input>
-        <el-button type="primary">
+        <el-input  v-model="name" placeholder="请输入搜索名称"></el-input>
+        <el-button type="primary" @click="select">
         <img src="../../assets/images/icon-find@2x.png" alt="">
         查询</el-button>
       </div>
@@ -18,7 +18,7 @@
       border stripe
       style="width: 100%">
       <el-table-column
-        type="index" label="序号"
+        prop="pid" label="序号"
         width="160">
       </el-table-column>
       <el-table-column
@@ -30,7 +30,7 @@
         prop="operation"
         label="操作">
         <template slot-scope="scope">
-          <el-button round class="delete" size="small"  @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
+          <el-button round class="delete" size="small"  @click.native.prevent="deleteRow(scope.row)">删除</el-button>
           <el-button round @click="jumpModift(scope.row)" class="change-button"  size="small">修改</el-button>
         </template>
       </el-table-column>
@@ -48,10 +48,9 @@
           background
           @size-change="handleSizeChange" 
           @current-change="handleCurrentChange" 
-          :page-size="pageSize" 
-          :current-page.sync="currentPage"
-          :total="total"
-          :pager-count="pagerCount"
+          :page-size="page.pageSize" 
+          :current-page.sync="page.currentPage"
+          :total="page.total"
           layout="pager">
         </el-pagination>
         <div @click="nextPage" class="prev_next">
@@ -68,6 +67,7 @@
 
 <script>
   import HeaderContent from '@/components/header/header';
+  import { List, DelList,UpdateList } from '@/api/list'
 
   export default {
     name: 'listTable',
@@ -76,39 +76,86 @@
     },
     data () {
       return {
-        input:'',
-        currentPage:1,
-        pageSize:10,
-        total:100,
-        pagerCount:11,
-        // tableData:[]
-        tableData:[{
-          name: '上海市门诊医疗票据'
-        }, {
-          name: '上海市第六人民医院门急诊医疗票据'
-        }, {
-          name: '上海市门诊医疗票据'
-        }, {
-          name: '上海市交通大学附属第九人民医院门急诊医疗票据'
-        }, {
-          name: '上海同济大学附属口腔医院门诊医疗票据'
-        },{
-          name: '上海市第十人民医院门急诊医疗票据'
-        }, {
-          name: '上海市第六人民医院门急诊医疗票据'
-        },{
-          name: '上海市第一妇婴保健院门急诊医疗票据'
-        }]
+        name:'',
+        // pagerCount:11,
+        tableData:[],
+        page:{
+          total:0,
+          pageSize:10,
+          currentPage:1
+        },
+        isFirstPage: true,
+        isLastPage: true,
+        hasPreviousPage: false,
+        hasNextPage: false,
+        // tableData:[{
+        //   name: '上海市门诊医疗票据'
+        // }, {
+        //   name: '上海市第六人民医院门急诊医疗票据'
+        // }, {
+        //   name: '上海市门诊医疗票据'
+        // }, {
+        //   name: '上海市交通大学附属第九人民医院门急诊医疗票据'
+        // }, {
+        //   name: '上海同济大学附属口腔医院门诊医疗票据'
+        // },{
+        //   name: '上海市第十人民医院门急诊医疗票据'
+        // }, {
+        //   name: '上海市第六人民医院门急诊医疗票据'
+        // },{
+        //   name: '上海市第一妇婴保健院门急诊医疗票据'
+        // }]
       }
     },
+    created() {
+      this.initData()
+    },
     methods:{
-      deleteRow(index, rows) {
+      async initData() {
+        let data = {
+          name:this.name,
+          pageSize: 10, //每页条数
+          pageNum: 1 //当前页码
+        }
+        let res = await List(data)
+        if (res) {
+          this.tableData=res.list
+          this.page.total=res.total
+          this.page.pageSize=res.pageSize
+          this.page.currentPage=res.pageNum
+          this.isFirstPage=res.isFirstPage
+          this.isLastPage=res.isLastPage
+          this.hasPreviousPage=res.hasPreviousPage
+          this.hasNextPage=res.hasNextPage
+        }
+      },
+      async deleteData(){
+        let str = this.img
+        if(str.indexOf('.jpg')== -1 || str.indexOf('.png')== -1){
+          this.img=''
+        }
+        let data={
+          pid:this.pid,
+          img:this.img
+        }
+        let res = await DelList(data)
+        if(res){
+          this.initData()
+        }
+      }, 
+     
+      select(){
+        this.initData()
+      },
+      deleteRow(row) {
+        this.pid=row.pid
+        this.img=row.img
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-        rows.splice(index, 1);
+          this.deleteData()
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -121,36 +168,40 @@
         });
       },
       jumpModift(row) {
-        this.$router.push('./addChange');
+        this.$router.push({name:'Addchange',params:{statusGato:'修改',changeText:row}});
       },
       add(){
-        this.$router.push('./addChange');
+        this.$router.push({name:'Addchange',params:{statusGato:'新增'}});
       },
       prev(){
-        this.currentPage=1
+        if(this.isFirstPage){
+          console.log("clickfirstPage")
+          this.page.currentPage=1
+        }
       },
       next(){
-        this.currentPage=this.total;
+        if(this.isLastPage){
+          console.log("clickLastPage")
+          this.page.currentPage= this.page.total/this.page.pageSize;
+        }
       },
       prevPage(){
-        if(this.currentPage){
-          this.currentPage-=1
-        }else{
-          this.currentPage=1
+        if(this.hasPreviousPage){
+          console.log("clickPrevPage")
+          this.page.currentPage-=1
         }
       },
       nextPage(){
-        if(this.currentPage<=this.total){
-          this.currentPage+=1
-        }else{
-          this.currentPage=this.total
+        if(this.hasNextPage){
+          console.log("clickNextPage")
+          this.page.currentPage+=1;
         }
       },
       handleSizeChange(val) {
-        this.pageSize = val;
+        this.page.pageSize = val;
       },
       handleCurrentChange(val) {
-        this.currentPage = val;
+        this.page.currentPage = val;
       }
     }
 

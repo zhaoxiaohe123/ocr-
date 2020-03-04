@@ -3,7 +3,7 @@
     <HeaderContent></HeaderContent>
    <div class="type-content">
       <div class="type">
-        当前状态:<i></i>新增
+        当前状态:<i></i>{{this.statusGato}}
       </div>
    </div>
     <div class="enter-content">
@@ -17,7 +17,7 @@
         <div class="upload-btn">
           <el-upload
             class="upload-content"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
             ref="upload"
             :on-change="uoloadChange"
             :file-list="fileList"
@@ -83,6 +83,7 @@
 
 <script>
   import HeaderContent from '@/components/header/header';
+  import {AddList,UpdateList} from '@/api/list'
   export default {
     name: 'addChange',
     components: {
@@ -110,7 +111,9 @@
         point:[],
         mainHeight:0,
         rightWidth:0,
-        leftLi:0
+        leftLi:0,
+        imgFile:'',
+        statusGato:'新增'
       }
     },
     methods:{
@@ -125,7 +128,6 @@
         // formData.append('file', file.raw);
         // formData.append('name', this.imgName);
         // formData.append('points', JSON.stringify(this.point));
-        console.log(this.fileList);
         this.imgFile = file;
         console.log(this.imgFile)
         if(this.imgName == ''){
@@ -149,12 +151,6 @@
       },
       // 数据提交
       submitUpload(){
-        this.$refs.upload.submit();
-        console.log('提交');
-      },
-      // 自定义上传
-      customUpload(file){
-        console.log(file)
         this.point = [];
         if(this.point2.length > 0){
           if(this.point2.length == 1){
@@ -191,6 +187,16 @@
           }
         }
         console.log(this.point);
+        console.log('提交');
+        if(this.statusGato=='新增'){
+          this.addList();
+        }else{
+          this.updataList()
+        }
+      },
+      // 自定义上传
+      customUpload(file){
+        console.log(file)
       },
       // 上传校验
       uploadVer(file){

@@ -16,18 +16,19 @@
     <el-table
       :data="tableData"
       border stripe
+      max-height="500"
       style="width: 100%">
       <el-table-column
         prop="pid" label="序号"
-        width="160">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="名称"
-        width="500">
+        label="名称">
       </el-table-column>
       <el-table-column
         prop="operation"
+        width="200"
         label="操作">
         <template slot-scope="scope">
           <el-button round class="delete" size="small"  @click.native.prevent="deleteRow(scope.row)">删除</el-button>
@@ -169,10 +170,10 @@
         });
       },
       jumpModift(row) {
-        this.$router.push({name:'Addchange',params:{statusGato:'修改',changeText:row}});
+        this.$router.push({name:'Addchange',query:{statusGato:'修改',changeText:JSON.stringify(row)}});
       },
       add(){
-        this.$router.push({name:'Addchange',params:{statusGato:'新增'}});
+        this.$router.push({name:'Addchange',query:{statusGato:'新增'}});
       },
       prev(){
         if(this.isFirstPage){
@@ -204,8 +205,7 @@
       handleCurrentChange(val) {
         this.page.currentPage = val;
       }
-    }
-
+    },
   }
 </script>
 

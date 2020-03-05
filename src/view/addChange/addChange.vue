@@ -2,7 +2,10 @@
   <div class="add-change-content">
     <HeaderContent></HeaderContent>
    <div class="type-content">
-      <div class="type">
+      <div class="type" v-if="this.statusGato == '新增'">
+        当前状态:<i></i>{{this.statusGato}}
+      </div>
+      <div class="type" v-if="this.statusGato == '修改'">
         当前状态:<i></i>{{this.statusGato}}
       </div>
    </div>
@@ -24,7 +27,7 @@
             :http-request="customUpload"
             :before-upload="uploadVer"
             >
-            <el-button class="deepPurple-btn"><img src="./images/upload-icon.png" alt="">上传照片</el-button>
+            <el-button class="deepPurple-btn" v-if="this.statusGato == '新增'"><img src="./images/upload-icon.png" alt="">上传照片</el-button>
           </el-upload>
         </div>
       </div>
@@ -113,7 +116,9 @@
         rightWidth:0,
         leftLi:0,
         imgFile:'',
-        statusGato:'新增'
+        statusGato:'新增',
+        pid:'',
+        point_id:'',
       }
     },
     methods:{
@@ -152,43 +157,100 @@
       // 数据提交
       submitUpload(){
         this.point = [];
-        if(this.point2.length > 0){
-          if(this.point2.length == 1){
-            this.point.push({
-              point_name:this.point2[0].name,
-              x_axis:this.point2[0].x,
-              y_axis:this.point2[0].y,
-              width:this.point2[0].wwidth,
-              height:this.point2[0].wheigth
-            })
-          }
-          if(this.point2.length > 1){
-            for(let item in this.point2){
-              let temp = {}
-              if(this.point2[item].name == '基础框'){
-                temp = {
-                  point_name:this.point2[item].name,
-                  x_axis:this.point2[item].x,
-                  y_axis:this.point2[item].y,
-                  width:this.point2[item].wwidth,
-                  height:this.point2[item].wheigth
+
+        if(this.statusGato == '新增'){
+          if(this.point2.length > 0){
+            if(this.point2.length == 1){
+              this.point.push({
+                point_name:this.point2[0].name,
+                x_axis:this.point2[0].x,
+                y_axis:this.point2[0].y,
+                width:this.point2[0].wwidth,
+                height:this.point2[0].wheigth
+              })
+            }
+            if(this.point2.length > 1){
+              for(let item in this.point2){
+                let temp = {}
+                if(this.point2[item].name == '基础框'){
+                  temp = {
+                    point_name:this.point2[item].name,
+                    x_axis:this.point2[item].x,
+                    y_axis:this.point2[item].y,
+                    width:this.point2[item].wwidth,
+                    height:this.point2[item].wheigth
+                  }
+                }else{
+                  temp = {
+                    point_name:this.point2[item].name,
+                    x_axis:this.point2[item].x,
+                    y_axis:this.point2[item].y,
+                    width:this.point2[item].wwidth,
+                    height:this.point2[item].wheigth
+                  }
                 }
-              }else{
-                temp = {
-                  point_name:this.point2[item].name,
-                  x_axis:this.point2[item].x-this.point2[0].x,
-                  y_axis:this.point2[item].y-this.point2[0].y,
-                  width:this.point2[item].wwidth,
-                  height:this.point2[item].wheigth
-                }
+                this.point.push(temp);
               }
-              this.point.push(temp);
+            }
+          }
+        }else{
+          console.log(this.point2,'------------')
+          if(this.point2.length > 0){
+            if(this.point2.length == 1){
+              this.point.push({
+                id:this.point2[item] ? this.point2[item].id.toString() : '',
+                point_id:this.point_id,
+                point_name:this.point2[0].name,
+                x_axis:this.point2[0].x.toString(),
+                y_axis:this.point2[0].y.toString(),
+                width:this.point2[0].wwidth.toString(),
+                height:this.point2[0].wheigth.toString()
+              })
+            }
+            if(this.point2.length > 1){
+              for(let item in this.point2){
+                let temp = {}
+                if(this.point2[item].name == '基础框'){
+                  temp = {
+                    id:this.point2[item] ? this.point2[item].id.toString() : '',
+                    point_id:this.point_id,
+                    point_name:this.point2[item].name,
+                    x_axis:this.point2[item].x.toString(),
+                    y_axis:this.point2[item].y.toString(),
+                    width:this.point2[item].wwidth.toString(),
+                    height:this.point2[item].wheigth.toString()
+                  }
+                }else{
+                  console.log(this.point2);
+                  temp = {
+                    id:this.point2[item].id ? this.point2[item].id.toString() : '',
+                    point_id:this.point_id,
+                    point_name:this.point2[item].name,
+                    x_axis:this.point2[item].x.toString(),
+                    y_axis:this.point2[item].y.toString(),
+                    width:this.point2[item].wwidth.toString(),
+                    height:this.point2[item].wheigth.toString()
+                  }
+                }
+                this.point.push(temp);
+              }
             }
           }
         }
+        
         console.log(this.point);
         console.log('提交');
-        if(this.statusGato=='新增'){
+        if(this.imgName == ''){
+           this.$message.error('请输入类型名称');
+           return false;
+        }
+
+        if(this.imgUrl == ''){
+           this.$message.error('请上传图片');
+           return false;
+        }
+
+        if(this.statusGato == '新增'){
           this.addList();
         }else{
           this.updataList()
@@ -436,12 +498,12 @@
         document.onmousemove = (e) =>{
           let left = e.clientX - disX;    
           pdiv.style.width = left + 2 + 'px';
-          this.point2[index].wwidth = left + 2 + 'px';
+          this.point2[index].wwidth = left;
           let imgWidth = this.imgWidth - parseInt(pdiv.style.left);
 
           if(left > imgWidth){
               pdiv.style.width = imgWidth + 2 + 'px';
-              this.point2[index].wwidth = imgWidth + 2 + 'px';
+              this.point2[index].wwidth = imgWidth + 2;
           }
         }
         document.onmouseup = (e) => {
@@ -461,13 +523,14 @@
         document.onmousemove = (e) =>{
           let top = e.clientY - disY;    
           pdiv.style.height = top + 2 + 'px';
-          this.point2[index].height = top + 2 + 'px';
+          console.log(this.point2[index]);
+          this.point2[index].wheigth = top;
 
           let imgHidth = this.imgHidth - parseInt(pdiv.style.top);
 
           if(top > imgHidth){
               pdiv.style.height = imgHidth + 2 + 'px';
-              this.point2[index].height = imgHidth + 2 + 'px';
+              this.point2[index].height = wheigth;
           }
         }
         document.onmouseup = (e) => {
@@ -576,76 +639,103 @@
         console.log(JSON.stringify(this.point))
         let formData = new FormData() // 创建form对象 
         let point11 = {
-          point:JSON.stringify(this.point)
+          point:this.point
         }
-        console.log(point11)
         formData.append('file', this.imgFile.raw);
         formData.append('name', this.imgName);
-        formData.append('points', point11);
-        // let data ={
-        //   file:'',
-        //   name:this.imgName,
-        //   points:JSON.stringify(point11),
-        // }
-
-        // console.log(data)
+        formData.append('points', JSON.stringify(point11));
         let res =await AddList(formData)
         if(res){
           console.log("------",res)
+          if(res == 1){
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            });
+          }else{
+            this.$message({
+              type: 'info',
+              message: '添加失败!'
+            });
+          }
         }
       },
-       async updataList(){
-         console.log(this.point)
+      async updataList(){
+        console.log(this.point2,'---------')
         let formData = new FormData() // 创建form对象 
         // formData.append('file', this.imgFile);
         // formData.append('name', this.imgName);
         // formData.append('params', JSON.stringify(this.point));
-        let temp = { "pid":"1",
-                      "name": "浦东医疗门诊票据",
-                      "img": "",
-                      "point_id":"1",
-                      "point": [{
-                        "id":"1",
-                        "point_name": "基础框",
-                        "x_axis": "10",
-                        "y_axis": "10",
-                        "width": "10",
-                        "height": "10"
-                      },
-                      {
-                        "id":"2",
-                        "point_name": "详情",
-                        "x_axis": "10",
-                        "y_axis": "10",
-                        "width": "10",
-                        "height": "10"
-                      },
-                      {
-                        "id":"3",
-                        "point_name": "内容",
-                        "x_axis": "10",
-                        "y_axis": "10",
-                        "width": "10",
-                        "height": "10"
-                      }
-                      ]
-                    }
-        formData.append('params', temp);
-
+        
+        let temp = {
+          pid:this.pid,
+          name:this.imgName,
+          img:'',
+          point_id:this.point_id,
+          point:this.point
+        }
+        console.log(temp);
+        formData.append('params', JSON.stringify(temp));
+        console.log(temp,JSON.stringify(temp))
         let res = await UpdateList(formData)
         if(res){
           console.log(res,"---update---")
+          if(res == 1){
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            });
+          }else{
+            this.$message({
+              type: 'info',
+              message: '修改失败!'
+            });
+          }
         }
       },
+      // 页面状态修改
+      changePageState(){
+        if(this.$route.query.statusGato){
+          this.statusGato = this.$route.query.statusGato;
+        }
+        if(this.$route.query.changeText){
+          let obj = JSON.parse(this.$route.query.changeText);
+          console.log(obj)
+          this.pid = obj.pid.toString();
+          this.imgName = obj.name;
+          this.imgUrl = obj.img;
+          this.point_id = obj.point_id.toString();
+          let point = obj.point;
+          for(let item in point){
+            let temp = {
+              name:point[item].point_name,
+              wwidth:point[item].width,
+              wheigth:point[item].height,
+              x:point[item].x_axis,
+              y:point[item].y_axis,
+              borderColor:'',
+              backgroundColor:'',
+              liColor:'',
+              zIndex:2,
+              id:point[item].id,
+            }
+            if(point[item].point_name == '基础框'){
+              temp.backgroundColor = '';
+              temp.borderColor = '#E83C3C';
+            }else{
+              temp.backgroundColor = 'rgba(70,70,235,0.15)';
+              temp.borderColor = '#4848B7';
+            }
+            this.point2.push(temp);
+          }
+          this.imageState = true;
+          this.getImgWidthHeight(this.imgUrl);
+        }
+      }
     },
     created(){
       this.getMainHeight();
-      if(this.$route.params.statusGato){
-        this.statusGato = this.$route.params.statusGato;
-      }
-      if(this.$route.params.changeText){
-        
-      }
+      this.changePageState();
     },
     
   }

@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import { Button, Select,Input,Table,TableColumn,Upload,MessageBox,Message ,Pagination,Icon} from 'element-ui';
 
 Vue.component(Button.name, Button);
@@ -29,6 +30,7 @@ Vue.prototype.$prompt = MessageBox.prompt;
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

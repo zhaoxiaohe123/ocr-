@@ -47,8 +47,8 @@
           <li>5.具体内容</li>
           <li>6.现金支付</li> -->
           <li v-for="(item,index) in this.point2" :key="index" :style="{backgroundColor:item.liColor}" @click="changeLiColor(item)">
-            <div v-if="item.name == '基础框'">{{index+1}}.{{item.name}}</div>
-            <div v-if="item.name != '基础框'" class="cur">{{index+1}}.{{item.name}}</div>
+            <div v-if="index == 0">{{index+1}}.{{item.name}}</div>
+            <div v-if="index != 0" class="cur">{{index+1}}.{{item.name}}</div>
           </li>
         </ul>
       </div>
@@ -69,14 +69,14 @@
         :style="{zIndex:this.canvasIndex}"
         />
          <!-- :width="this.canvasWidth" :height="this.canvasHeight" -->
-        <div @mousedown="moveCanvas($event,index)" @click="changeColor(item)" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.name != '基础框' ? item.zIndex : '0'}" v-for="(item,index) in this.point2" :key="index">
-          <div v-if="item.name == '基础框'">{{item.name != '基础框' ? item.name : ''}}</div>
-          <input type="text" @blur="canvasInputBlur(item.name,index)" ref="canvasInputFocus" class="canvasText" v-if="item.name != '基础框'" v-model="item.name">
+        <div @mousedown="moveCanvas($event,index)" @click="changeColor(item)" class="canvas-border" :style="{width:item.wwidth+'px',height:item.wheigth+'px',top:item.y+'px',left:item.x+'px',backgroundColor:item.backgroundColor,border:'1px solid'+item.borderColor,lineHeight:item.wheigth+'px',zIndex:item.zIndex}" v-for="(item,index) in this.point2" :key="index">
+          <!-- <div>{{item.name}}</div> -->
+          <input type="text" @blur="canvasInputBlur(item.name,index)" ref="canvasInputFocus" class="canvasText" v-model="item.name">
           <div class="close" @click="delCanvas(index)" v-if="item.liColor != ''">
             <i class="el-icon-close"></i>
           </div>
-          <div v-if="item.name != '基础框'" class="moveLeft" @mousedown="changeWidth($event,index)" :style="{display:item.liColor !='' ? 'block' : 'none'}"></div>
-          <div v-if="item.name != '基础框'" class="moveTop" @mousedown="changeHeight($event,index)" :style="{display:item.liColor !='' ? 'block' : 'none'}"></div>
+          <div class="moveLeft" @mousedown="changeWidth($event,index)" :style="{display:item.liColor !='' ? 'block' : 'none'}"></div>
+          <div class="moveTop" @mousedown="changeHeight($event,index)" :style="{display:item.liColor !='' ? 'block' : 'none'}"></div>
         </div>
       </div>
     </div>
@@ -281,13 +281,8 @@
         this.isMouseDownInCanvas = true;
         console.log(this.point2);
         for(let item in this.point2){
-          if(this.point2[item].name == '基础框'){
-            this.point2[item].backgroundColor = '';
-            this.point2[item].borderColor = '#E83C3C';
-          }else{
-            this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
-            this.point2[item].borderColor = '#4848B7';
-          }
+          this.point2[item].backgroundColor = 'rgba(70,70,235,0.15)';
+          this.point2[item].borderColor = '#4848B7';
           this.point2[item].liColor = '';
           this.point2[item].zIndex = 2;
           let height1 = this.point2[item].y + this.point2[item].wheigth;
@@ -366,54 +361,30 @@
           this.startY = this.startY - wheigth;
         }
         if(wwidth > 10 || wheigth > 10){
-          if(this.point2.length > 0){
-            this.$prompt('请输入名称', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
-              inputErrorMessage: '名称不能为空'
-            }).then(({ value }) => {
-              let temp = {
-                name:value,
-                wwidth:wwidth,
-                wheigth:wheigth,
-                x:this.startX,
-                y:this.startY,
-                borderColor:'#4848B7',
-                backgroundColor:'rgba(70,70,235,0.15)',
-                liColor:'',
-                zIndex:2
-              }
-              console.log(wwidth,wheigth,this.startX,this.startY);
-              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-              this.point2.push(temp);
-            }).catch(() => {
-              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            });
-          }else{
-            this.$confirm('是否将此区域作为基础框', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'success'
-            }).then(() => {
-              let temp = {
-                name:'基础框',
-                wwidth:wwidth,
-                wheigth:wheigth,
-                x:this.startX,
-                y:this.startY,
-                borderColor:'#E83C3C',
-                backgroundColor:'',
-                liColor:'',
-                zIndex:2
-                
-              }
-              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-              this.point2.push(temp);
-            }).catch(() => {
-              this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);          
-            });
-          }
+          this.$prompt('请输入名称', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+            inputErrorMessage: '名称不能为空'
+          }).then(({ value }) => {
+            let temp = {
+              name:value,
+              wwidth:wwidth,
+              wheigth:wheigth,
+              x:this.startX,
+              y:this.startY,
+              borderColor:'#4848B7',
+              backgroundColor:'rgba(70,70,235,0.15)',
+              liColor:'',
+              zIndex:2,
+              index:1
+            }
+            console.log(wwidth,wheigth,this.startX,this.startY);
+            this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.point2.push(temp);
+          }).catch(() => {
+            this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+          });    
         }
       },
       // 鼠标移出
@@ -458,9 +429,9 @@
       },
       // 选中状态
       changeLiColor(item){
-        if(item.name !='基础框'){
+        if(item.index){
           for(let item in this.point2){
-            if(this.point2[item].name == '基础框'){
+            if(this.point2[item].index == 0){
               this.point2[item].backgroundColor = '';
               this.point2[item].borderColor = '#E83C3C';
             }else{
@@ -477,7 +448,6 @@
           item.liColor = '#52E5D2';
           item.zIndex = 3;
         }
-        console.log(this.point2);
       },
       // 删除绘制区域
       delCanvas(index){
@@ -530,7 +500,7 @@
 
           if(top > imgHidth){
               pdiv.style.height = imgHidth + 2 + 'px';
-              this.point2[index].height = wheigth;
+              this.point2[index].wheigth = imgHidth;
           }
         }
         document.onmouseup = (e) => {
@@ -603,9 +573,9 @@
         }
       },
       changeColor(item){
-        if(item.name !='基础框'){
+        if(item.index){
           for(let item in this.point2){
-            if(this.point2[item].name == '基础框'){
+            if(this.point2[item].index == 0){
               this.point2[item].backgroundColor = '';
               this.point2[item].borderColor = '#E83C3C';
             }else{
@@ -661,7 +631,7 @@
         }
       },
       async updataList(){
-        console.log(this.point2,'---------')
+        console.log(this.point2,'------------')
         let formData = new FormData() // 创建form对象 
         // formData.append('file', this.imgFile);
         // formData.append('name', this.imgName);
@@ -719,14 +689,10 @@
               zIndex:2,
               id:point[item].id,
             }
-            if(point[item].point_name == '基础框'){
-              temp.backgroundColor = '';
-              temp.borderColor = '#E83C3C';
-            }else{
-              temp.backgroundColor = 'rgba(70,70,235,0.15)';
-              temp.borderColor = '#4848B7';
-            }
-            this.point2.push(temp);
+            temp.backgroundColor = 'rgba(70,70,235,0.15)';
+            temp.borderColor = '#4848B7';
+            temp.index = 1
+            this.point2.push(temp); 
           }
           this.imageState = true;
           this.getImgWidthHeight(this.imgUrl);

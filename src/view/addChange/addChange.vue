@@ -303,7 +303,7 @@
             // 清除临时层指定区域的所有像素
             this.canvasDom.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
             this.canvasDom.strokeRect(this.startX,this.startY,wwidth,wheigth); //绘制矩形
-
+            console.log(wwidth,wheigth,this.startX,this.startY);
             
             // console.log(this.endY,this.startY)
             // 滚动条判断
@@ -356,8 +356,15 @@
         }
         if(wwidth < 0){
           wwidth = Math.abs(wwidth);
-          wheigth = Math.abs(wheigth);
           this.startX = this.startX - wwidth;
+          // wwidth = Math.abs(wwidth);
+          // wheigth = Math.abs(wheigth);
+          // this.startX = Math.abs(this.startX) - Math.abs(wwidth);
+          // this.startY = Math.abs(this.startY) - Math.abs(wheigth);
+        }
+
+        if(wheigth < 0){
+          wheigth = Math.abs(wheigth);
           this.startY = this.startY - wheigth;
         }
         if(wwidth > 10 || wheigth > 10){

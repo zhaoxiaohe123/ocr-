@@ -16,7 +16,7 @@
     <el-table
       :data="tableData"
       border stripe
-      max-height="500"
+      max-height="600"
       style="width: 100%">
       <el-table-column
         prop="pid" label="序号"
@@ -37,31 +37,13 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div @click="prev" class="prev_next">
-          <img class="img-1" src="../../assets/images/icon-maehe_@2x.png" alt="">
-          <span>1</span>
-        </div>
-      <div @click="prevPage" class="prev_next">
-            <img class="img-1" src="../../assets/images/icon-maehe@2x.png" alt="">
-            <span>上页</span>
-          </div>
-        <el-pagination 
-          background
-          @size-change="handleSizeChange" 
-          @current-change="handleCurrentChange" 
-          :page-size="page.pageSize" 
-          :current-page.sync="page.currentPage"
-          :total="page.total"
-          layout="pager">
+        <el-pagination
+          layout="prev, pager, next"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-size="this.page.pageSize"
+          :total="this.page.total">
         </el-pagination>
-        <div @click="nextPage" class="prev_next">
-          <span>下页</span>
-          <img class="img-2" src="../../assets/images/icon-maehe_z@2x.png" alt="">
-        </div>
-        <div @click="next" class="prev_next">
-          <span>999</span>
-          <img class="img-2" src="../../assets/images/icon-maehe_u@2x.png" alt="">
-        </div>
       </div>
   </div>
 </template>
@@ -115,20 +97,14 @@
       async initData() {
         let data = {
           name:this.name,
-          pageSize: 10, //每页条数
-          pageNum: 1 //当前页码
+          pageSize: this.page.pageSize, //每页条数
+          pageNum: this.page.currentPage //当前页码
         }
         let res = await List(data)
         if (res) {
           console.log(res);
           this.tableData=res.list
-          this.page.total=res.total
-          this.page.pageSize=res.pageSize
-          this.page.currentPage=res.pageNum
-          this.isFirstPage=res.isFirstPage
-          this.isLastPage=res.isLastPage
-          this.hasPreviousPage=res.hasPreviousPage
-          this.hasNextPage=res.hasNextPage
+          this.page.total = res.total;
         }
       },
       async deleteData(){
@@ -175,35 +151,14 @@
       add(){
         this.$router.push({name:'Addchange',query:{statusGato:'新增'}});
       },
-      prev(){
-        if(this.isFirstPage){
-          console.log("clickfirstPage")
-          this.page.currentPage=1
-        }
-      },
-      next(){
-        if(this.isLastPage){
-          console.log("clickLastPage")
-          this.page.currentPage= this.page.total/this.page.pageSize;
-        }
-      },
-      prevPage(){
-        if(this.hasPreviousPage){
-          console.log("clickPrevPage")
-          this.page.currentPage-=1
-        }
-      },
-      nextPage(){
-        if(this.hasNextPage){
-          console.log("clickNextPage")
-          this.page.currentPage+=1;
-        }
-      },
       handleSizeChange(val) {
+        console.log(val);
         this.page.pageSize = val;
       },
       handleCurrentChange(val) {
+        console.log(val);
         this.page.currentPage = val;
+        this.initData();
       }
     },
   }
